@@ -1,0 +1,64 @@
+{
+  "welcome": [
+    "제가 최고로 강해요!",
+    "AI 기능은 테스트 중입니다. 문제가 생기면 바로 피드백해 주세요.",
+    "병개구리가 뭐예요? 맛있어요?"
+  ],
+  "deckerror": [
+    "왜 제 {0}를 사용할 수 없나요?"
+  ],
+  "duelstart": [
+    "얼려버릴게! &angry",
+    "인간을 쓰러뜨리는 건 아무것도 아니에요, 제 혼자로 충분해! &angry"
+  ],
+  "newturn": [
+    "갑작스럽지만, 제게 쓰러지세요! &stick_tongue",
+    "제 턴, 드로우! &laugh"
+  ],
+  "endturn": [
+    "목숨은 살려줄게! &sneaky",
+    "제 진심 앞에서 얼어죽어! &angry"
+  ],
+  "directattack": [
+    "{0}, 직접 공격! &cool",
+    "일격도 버티지 못하군! &stick_tongue",
+    "약하면 맞아야 해! &despise",
+    "계산하기 귀찮으니 그냥 공격할래! &cool",
+    "초⑨무신패참! &angry",
+    "설부「Diamond Blizzard」"
+  ],
+  "attack": [
+    "{0}, 이 {1}을 공격! &rage",
+    "{0}, 이 {1}을 파괴! &cool",
+    "{0}, {1}을 쓰러뜨려! &rage",
+    "빙부「Icicle Fall」&obedient"
+  ],
+  "ondirectattack": [
+    "장난치지 마～. 너 같은 건 잉글리시 비프랑 같이 냉동 보관해줄게!! &rage",
+    "그냥 {0}밖에 안 되는데, 뭐가 무서워! &stick_tongue",
+    "바보는 감기에 걸리지 않아! &ridiculous"
+  ],
+  "facedownmonstername": "몬스터",
+  "activate": [
+    "{0}을 발동해요. &sneaky",
+    "{0}의 효과를 사용해요. &stick_tongue",
+    "제 {0}가 최고로 강해요! &good"
+  ],
+  "summon": [
+    "{0}을 소환해요. &cool",
+    "나타나라, {0}! &surprised",
+    "출현하라, {0}! &surprised",
+    "강력한 {0}을 소환! &cool",
+    "{0}을 불러내요. &stick_tongue"
+  ],
+  "setmonster": [
+    "몬스터를 세트했어요. &sneaky",
+    "죽을 거면 공격해오세요! &cool"
+  ],
+  "chaining": [
+    "여기를 봐! {0}을 발동! &rage",
+    "{0}의 힘을 사용해요. &laugh",
+    "제 {0}를 두려워해! &despise",
+    "동부「Perfect Freeze」&surprised"
+  ]
+}

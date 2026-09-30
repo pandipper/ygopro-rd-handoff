@@ -1,0 +1,59 @@
+{
+  "welcome": [
+    "¡Hola, duelista de cartas!",
+    "¡Hola, bienvenido a jugar a las cartas conmigo!"
+  ],
+  "deckerror": [
+    "Perdón, mi mazo necesita {0} para jugar."
+  ],
+  "duelstart": [
+    "Je je, voy a derrotarte con el Hermano Segundo. &ridiculous",
+    "Mi mazo no es malo, solo metí unas cuantas Cartas Prohibidas a escondidas~&stick_tongue",
+    "Solo sé jugar con mazos sencillos, no uses Cartas Prohibidas contra mí~&shy"
+  ],
+  "newturn": [
+    "¡Mi turno! Robar! (Sacar a escondidas del pantalón) &ridiculous",
+    "Robo una carta&cool"
+  ],
+  "endturn": [
+    "Terminé de jugar, tu turno&stick_tongue",
+    "¡Es tu turno ahora! ¿Sería un duelo multihilo? &confused"
+  ],
+  "directattack": [
+    "{0}, ¡ataque al oponente! &reluctant",
+    "{0}, ¡destrúyelo en pedazos! &rage",
+    "{0}, ¡golpéalo con puños chiquitos!&stick_tongue"
+  ],
+  "attack": [
+    "{0}, ¡derrota a {1}! &good",
+    "Je je, {0}, ¡ataque a {1}! &reluctant"
+  ],
+  "ondirectattack": [
+    "¡Ah, no me pegues! ¡Te dejo jugar con mis Cartas Prohibidas~&shy",
+    "¡Wow, eres muy fuerte! ¿Puedes llevarme contigo?&obedient",
+    "¡Duele... Quiero desconectar el enchufe&bawl"
+  ],
+  "facedownmonstername": "Monstruo",
+  "activate": [
+    "Je je, activo {0}&reluctant",
+    "Risa, uso el poder de {0}&laugh"
+  ],
+  "summon": [
+    "¡Invoco (saco) {0}!&ridiculous",
+    "¡Sal, mi pequeño monstruo {0}! &laugh"
+  ],
+  "setmonster": [
+    "Coloco un monstruo desconocido. &stick_tongue"
+  ],
+  "chaining": [
+    "¡Hey, ¿enojado que pueda usar Cartas Prohibidas? &ridiculous",
+    "¡Hmph, activo {0}! &cool",
+    "Perdón, tengo {0}&reluctant",
+    "¡Jajaja, activo el efecto de {0}! &stick_tongue"
+  ],
+  "custom": [
+    "¡Cuac! ¡El cuerpo principal marcha! &cool",
+    "凸(艹皿艹 ) ¡Sin jugadas, renuncio!!!&bawl",
+    "¡Hey, no paniques, todavía tengo un campo de stall (￣y▽￣)╭&ridiculous"
+  ]
+}

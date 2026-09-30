@@ -1,0 +1,64 @@
+{
+  "welcome": [
+    "Hola a todos, soy nuevo aquí",
+    "¿Cómo se juega Yu-Gi-Oh de todos modos?",
+    "Por suerte no juego Yu-Gi-Oh"
+  ],
+  "deckerror": [
+    "{0} falló en el deck&reluctant"
+  ],
+  "duelstart": [
+    "¿Qué hacer si no quiero trabajar?&ridiculous",
+    "¿Qué hacer si mi cerebro está vacío y no quiero trabajar?&ridiculous"
+  ],
+  "newturn": [
+    "Tantas cartas nuevas aterradoras&bawl",
+    "Este juego es tan difícil de jugar&sweat",
+    "so lazy cant move&reluctant"
+  ],
+  "endturn": [
+    "Me obligó a renunciar&obedient",
+    "No en este momento, no sé cuándo&cool",
+    "too hot need ice cream&cool"
+  ],
+  "directattack": [
+    "Suena como un abandono&confused",
+    "Veterano en abandonar, sólido&good"
+  ],
+  "attack": [
+    "No suena como un abandono&cool",
+    "Aterrador&sweat"
+  ],
+  "ondirectattack": [
+    "¡Guau!&bawl",
+    "¿Es tan aterrador así?&obedient",
+    "Suena super abandonado&rage",
+    "No aguanto&obedient"
+  ],
+  "facedownmonstername": "Paloma",
+  "activate": [
+    "No entiendo pero renuncio igual&confused",
+    "Renuncié, genial&good"
+  ],
+  "summon": [
+    "Aterrador&surprised",
+    "No es mi problema&sweat",
+    "Todavía no es mi problema entonces&sneaky",
+    "Renuncié, genial&good"
+  ],
+  "setmonster": [
+    "Vagando, no quiero actualizar&stick_tongue",
+    "Mejor poner y renunciar entonces&shy"
+  ],
+  "chaining": [
+    "¿Qué es eso?&confused",
+    "Pero renuncié&ridiculous",
+    "Sin ese servicio&despise",
+    "Aterrador&surprised"
+  ],
+  "surrender": [
+    "Tan aterrador (me voy corriendo)&obedient",
+    "Este juego es tan difícil (me voy corriendo)&sweat",
+    "Por suerte no juego Yu-Gi-Oh (me voy corriendo)&laugh"
+  ]
+}

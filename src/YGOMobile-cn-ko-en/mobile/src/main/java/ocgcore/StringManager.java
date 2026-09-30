@@ -1,0 +1,337 @@
+package ocgcore;
+
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.SparseArray;
+
+import com.file.zip.ZipEntry;
+import com.file.zip.ZipFile;
+
+import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+
+import cn.garymb.ygomobile.AppsSettings;
+import cn.garymb.ygomobile.Constants;
+import cn.garymb.ygomobile.utils.IOUtils;
+import cn.garymb.ygomobile.utils.StringUtils;
+import ocgcore.data.CardSet;
+import ocgcore.enums.CardAttribute;
+import ocgcore.enums.CardCategory;
+import ocgcore.enums.CardOt;
+import ocgcore.enums.CardRace;
+import ocgcore.enums.CardType;
+import ocgcore.enums.LimitType;
+
+public class StringManager implements Closeable {
+    private static final String PRE_SYSTEM = "!system";
+    private static final String PRE_SETNAME = "!setname";
+    private final SparseArray<String> mSystem = new SparseArray<>();
+    private final List<CardSet> mCardSets = new ArrayList<>();
+
+    public StringManager() {
+
+    }
+
+    @Override
+    public void close() {
+        mSystem.clear();
+        mCardSets.clear();
+    }
+
+    public boolean load() {
+        mSystem.clear();
+        mCardSets.clear();
+        File stringFile = new File(AppsSettings.get().getResourcePath(), Constants.CORE_STRING_PATH);
+        boolean rs1 = loadFile(stringFile.getAbsolutePath());
+        boolean rs2 = true;
+        boolean res3 = true;
+        if (AppsSettings.get().isReadExpansions()) {
+            File stringFile2 = new File(AppsSettings.get().getExpansionsPath(), Constants.CORE_STRING_PATH);
+            rs2 = loadFile(stringFile2.getAbsolutePath());
+            File[] files = AppsSettings.get().getExpansionsPath().listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile() && (file.getName().endsWith(".zip") || file.getName().endsWith(Constants.YPK_FILE_EX))) {
+                        Log.e("StringManager", "读取压缩包");
+                        try {
+                            ZipFile zipFile = new ZipFile(file.getAbsoluteFile(), "GBK");
+                            Enumeration<ZipEntry> entris = zipFile.getEntries();
+                            ZipEntry entry;
+                            while (entris.hasMoreElements()) {
+                                entry = entris.nextElement();
+                                if (!entry.isDirectory()) {
+                                    if (entry.getName().contains("string") && entry.getName().endsWith(".conf")) {
+                                        res3 &= loadFile(zipFile.getInputStream(entry));
+                                    }
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            res3 = false;
+                        }
+                    }
+                }
+            }
+        }
+        return rs1 && rs2 && res3;
+    }
+
+    public boolean loadFile(InputStream inputStream) {
+
+        InputStreamReader in = null;
+        try {
+            in = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            BufferedReader reader = new BufferedReader(in);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("#") || (!line.startsWith(PRE_SYSTEM) && !line.startsWith(PRE_SETNAME))) {
+                    continue;
+                }
+                // 最多切分为3段，保留文本中的空格（韩/英/日等非中文语言的文本包含空格）
+                String[] words = line.split("[\t ]+", 3);
+
+                if (words.length >= 3) {
+                    // 文本只取第一个制表符之前的部分（制表符后为日文注释等内容），名字内部空格保留
+                    String text = words[2];
+                    int tabIndex = text.indexOf('\t');
+                    if (tabIndex >= 0) {
+                        text = text.substring(0, tabIndex);
+                    }
+                    text = text.trim();
+                    if (PRE_SETNAME.equals(words[0])) {
+                        //setcode
+                        long id = toNumber(words[1]);
+                        CardSet cardSet = new CardSet(id, text);
+                        int i = mCardSets.indexOf(cardSet);
+                        if (i >= 0) {
+                            CardSet cardSet1 = mCardSets.get(i);
+                            cardSet1.setName(cardSet.getName());
+                        } else {
+                            mCardSets.add(cardSet);
+                        }
+                    } else {
+                        mSystem.put((int) toNumber(words[1]), text);
+                    }
+                }
+            }
+        } catch (Exception e) {
+
+        } finally {
+            IOUtils.close(inputStream);
+            IOUtils.close(in);
+        }
+        Collections.sort(mCardSets, CardSet.NAME_ASC);
+        return true;
+    }
+
+    public boolean loadFile(String path) {
+        if (path == null || path.length() == 0) {
+            return false;
+        }
+        File file = new File(path);
+        if (file.isDirectory() || !file.exists()) {
+            return false;
+        }
+        InputStreamReader in = null;
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(file);
+            in = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            BufferedReader reader = new BufferedReader(in);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("#") || (!line.startsWith(PRE_SYSTEM) && !line.startsWith(PRE_SETNAME))) {
+                    continue;
+                }
+                // 最多切分为3段，保留文本中的空格（韩/英/日等非中文语言的文本包含空格）
+                String[] words = line.split("[\t ]+", 3);
+                if (words.length >= 3) {
+                    // 文本只取第一个制表符之前的部分（制表符后为日文注释等内容），名字内部空格保留
+                    String text = words[2];
+                    int tabIndex = text.indexOf('\t');
+                    if (tabIndex >= 0) {
+                        text = text.substring(0, tabIndex);
+                    }
+                    text = text.trim();
+                    if (PRE_SETNAME.equals(words[0])) {
+                        //setcode
+                        long id = toNumber(words[1]);
+                        //setname
+                        String setname = text;
+                        CardSet cardSet;
+                        cardSet = new CardSet(id, setname);
+                        int i = mCardSets.indexOf(cardSet);
+                        if (i >= 0) {
+                            CardSet cardSet1 = mCardSets.get(i);
+                            cardSet1.setName(cardSet.getName());
+                        } else {
+                            mCardSets.add(cardSet);
+                        }
+                    } else {
+                        mSystem.put((int) toNumber(words[1]), text);
+                    }
+                }
+            }
+        } catch (Exception e) {
+
+        } finally {
+            IOUtils.close(inputStream);
+            IOUtils.close(in);
+        }
+        Collections.sort(mCardSets, CardSet.NAME_ASC);
+        return true;
+    }
+
+    public SparseArray<String> getSystem() {
+        return mSystem;
+    }
+
+    public List<CardSet> getCardSets() {
+        return mCardSets;
+    }
+
+    public String getSetName(long key) {
+        CardSet cardSet = new CardSet(key, null);
+        int i = mCardSets.indexOf(cardSet);
+        if (i >= 0) {
+            return mCardSets.get(i).getName();
+        }
+        return String.format("0x%x", key);
+    }
+
+    public long getSetCode(String key, boolean fuzzy) {
+        for (int i = 0; i < mCardSets.size(); i++) {
+            CardSet cardSet = mCardSets.get(i);
+            String[] setNames = cardSet.getName().split("\\|");
+            if (fuzzy) {
+                if (setNames[0].contains(key)) {
+                    return cardSet.getCode();
+                }
+            } else {
+                if (setNames[0].equalsIgnoreCase(key)) {
+                    return cardSet.getCode();
+                }
+            }
+
+        }
+        return 0;
+    }
+
+    /**
+     * @param index 索引
+     * @param def   默认值
+     */
+    public String getSystemString(Integer index, String def) {
+        if (index <= 0) {
+            return def;
+        }
+        try {
+            String str = mSystem.get(index);
+            if (TextUtils.isEmpty(str)) {
+                return def;
+            }
+            return StringUtils.toDBC(str);
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    public String getLimitString(long id) {
+        LimitType value = LimitType.valueOf(id);
+        if (value == null) {
+            return String.valueOf(id);
+        }
+        return getSystemString(value.getLanguageIndex(), value.name());
+    }
+
+    public String getTypeString(long id) {
+        CardType value = CardType.valueOf(id);
+        if (value == null) {
+            return String.valueOf(id);
+        }
+        return getSystemString(value.getLanguageIndex(), value.name());
+    }
+
+    public String getAttributeString(long id) {
+        CardAttribute value = CardAttribute.valueOf(id);
+        if (value == null) {
+            return String.valueOf(id);
+        }
+        return getSystemString(value.getLanguageIndex(), value.name());
+    }
+
+    public String getRaceString(long id) {
+        CardRace value = CardRace.valueOf(id);
+        if (value == null) {
+            return String.format("0x%x", id);
+        }
+        return getSystemString(value.getLanguageIndex(), value.name());
+    }
+
+    /**
+     * 根据OT值获取对应的字符串表示
+     *
+     * @param ot   OT值，用于标识卡片类型
+     * @param full 是否返回完整的OT字符串组合，如果为true则返回所有匹配的OT类型的组合字符串；如果为false则返回单个OT类型的字符串
+     * @return 对应的字符串表示，如果无法找到对应类型则返回OT值的字符串形式
+     */
+    public String getOtString(int ot, boolean full) {
+        // 当不需要完整模式或OT值为0时，直接返回单个OT类型的字符串表示
+        if (!full || ot == 0) {
+            CardOt value = CardOt.valueOf(ot);
+            if (value == null) {
+                return String.valueOf(ot);
+            }
+            return getSystemString(value.getLanguageIndex(), value.name());
+        }
+
+        // 构建完整模式下的OT类型组合字符串
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean first = true;
+        for (CardOt _ot : CardOt.values()) {
+            if (_ot.getId() == CardOt.NO_EXCLUSIVE.getId())
+                continue;
+            if ((_ot.getId() & ot) != 0) {
+                if (first) {
+                    first = false;
+                } else {
+                    stringBuilder.append("|");
+                }
+                stringBuilder.append(getSystemString(_ot.getLanguageIndex(), _ot.name()));
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    public String getCategoryString(long id) {
+        CardCategory value = CardCategory.valueOf(id);
+        if (value == null) {
+            return String.valueOf(id);
+        }
+        return getSystemString(value.getLanguageIndex(), value.name());
+    }
+
+    private long toNumber(String str) {
+        long i = 0;
+        try {
+            if (str.startsWith("0x")) {
+                i = Long.parseLong(str.replace("0x", ""), 0x10);
+            } else {
+                i = Long.parseLong(str);
+            }
+        } catch (Exception e) {
+
+        }
+        return i;
+    }
+}

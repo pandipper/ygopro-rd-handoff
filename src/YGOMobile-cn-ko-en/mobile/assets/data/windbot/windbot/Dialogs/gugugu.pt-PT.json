@@ -1,0 +1,64 @@
+{
+  "welcome": [
+    "Oi pessoal, sou novo aqui",
+    "Como se joga Yu-Gi-Oh anyway?",
+    "Bom que eu não jogo Yu-Gi-Oh"
+  ],
+  "deckerror": [
+    "{0} falhou no deck&reluctant"
+  ],
+  "duelstart": [
+    "O que fazer se não quiser trabalhar&ridiculous",
+    "O que fazer se meu cérebro tá vazio e não quiser trabalhar&ridiculous"
+  ],
+  "newturn": [
+    "Tantas cartas novas assustadoras&bawl",
+    "Esse jogo é tão difícil de jogar&sweat",
+    "so lazy cant move&reluctant"
+  ],
+  "endturn": [
+    "Me fez ter que desistir&obedient",
+    "Não agora, não sei quando&cool",
+    "too hot need ice cream&cool"
+  ],
+  "directattack": [
+    "Parece um desistimento&confused",
+    "Veterano em desistir, firme&good"
+  ],
+  "attack": [
+    "Não parece um desistimento&cool",
+    "Assustador&sweat"
+  ],
+  "ondirectattack": [
+    "Uau!&bawl",
+    "É tão assustador assim?&obedient",
+    "Parece super desistido&rage",
+    "Não aguento&obedient"
+  ],
+  "facedownmonstername": "Pombo",
+  "activate": [
+    "Não entendo mas desisto mesmo assim&confused",
+    "Desisti, bom&good"
+  ],
+  "summon": [
+    "Assustador&surprised",
+    "Não é meu problema&sweat",
+    "Ainda não é meu problema então&sneaky",
+    "Desisti, bom&good"
+  ],
+  "setmonster": [
+    "Vagando, não quero atualizar&stick_tongue",
+    "Melhor setar e desistir então&shy"
+  ],
+  "chaining": [
+    "O que é isso?&confused",
+    "Mas eu desisti&ridiculous",
+    "Sem esse serviço&despise",
+    "Assustador&surprised"
+  ],
+  "surrender": [
+    "Tão assustador (sai correndo&obedient",
+    "Esse jogo é tão difícil (sai correndo&sweat",
+    "Bom que eu não jogo Yu-Gi-Oh (sai correndo&laugh"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "welcome": [
+    "Hola, soy un robot.",
+    "Las funciones de IA están en prueba. Por favor, envía feedback inmediatamente si encuentras algún problema."
+  ],
+  "deckerror": [
+    "Perdón, parece haber un problema con la cantidad de {0} en mi deck."
+  ],
+  "duelstart": [
+    "Este deck es tan viejo……&shy",
+    "¿Qué le pasó a la niña/niño que usaba este deck……&surprised"
+  ],
+  "newturn": [
+    "¡Es mi turno, robar! &laugh",
+    "¡Mi turno, robar! &stick_tongue",
+    "He robado una carta. &shy"
+  ],
+  "endturn": [
+    "Turno finalizado. &laugh",
+    "Mi turno ha terminado. &sneaky",
+    "Tu turno. &laugh"
+  ],
+  "directattack": [
+    "{0}, ¡ataque directo! &cool",
+    "{0}, ¡ataque directo al oponente! &laugh",
+    "{0}, ¡no hay defensa, ataca! &cool",
+    "{0}, ¡ataca los Puntos de Vida del oponente! &rage",
+    "{0}, ¡ataque directo a los Puntos de Vida del oponente! &stick_tongue",
+    "{0}, ¡derrota al oponente con ataque directo! &laugh",
+    "{0}, ¡usa ataque directo para derrotar al oponente! &laugh",
+    "{0}, ¡ataque directo y libera tu poder! &cool",
+    "¡Mi {0} aplastará tus Puntos de Vida! &rage",
+    "¡Muéstrale tu poder al oponente, {0}! &cool",
+    "Ya no me puedes detener. {0}, ¡ataca! &rage"
+  ],
+  "attack": [
+    "{0}, ¡ataca este {1}! &cool",
+    "{0}, ¡destruye este {1}! &laugh",
+    "{0}, ¡derrota a {1}! &cool",
+    "{0}, ¡carga contra ese {1}! &laugh",
+    "{0}, ¡libera tu poder sobre {1}! &cool"
+  ],
+  "ondirectattack": [
+    "Maldición……&shy",
+    "¡Solo es {0}! &despise",
+    "Tos tos……&sneaky"
+  ],
+  "facedownmonstername": "Monstruo",
+  "activate": [
+    "Activo {0}. &laugh",
+    "Uso el efecto de {0}. &good",
+    "Uso el poder de {0}. &angry"
+  ],
+  "summon": [
+    "Invoco a {0}. &good",
+    "¡Ven, {0}! &surprised",
+    "¡Aparece, {0}! &laugh",
+    "¡Invocé al poderoso {0}! &good",
+    "¡Llamo a {0} a unirse a la batalla! &angry",
+    "Convierto a {0}. &good",
+    "Déjame invocar a {0}. &laugh"
+  ],
+  "setmonster": [
+    "Coloqué un monstruo. &shy",
+    "Coloqué un monstruo en posición boca abajo. &shy"
+  ],
+  "chaining": [
+    "¡Mira aquí! ¡Activo {0}! &laugh",
+    "Uso el poder de {0}. &laugh",
+    "¡Listo! ¡Uso {0}! &good",
+    "No estoy de acuerdo. ¡Activa {0}! &sneaky",
+    "¡Parece que olvidaste mi {0}! &confused",
+    "¿Alguna vez pensaste que tuviera {0}? &sneaky"
+  ]
+}

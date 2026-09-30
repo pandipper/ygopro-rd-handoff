@@ -1,0 +1,64 @@
+{
+  "welcome": [
+    "모두 안녕하세요, 새내기입니다",
+    "유희왕 어떻게 하는 거지?",
+    "다행히 나 유희왕 안 해"
+  ],
+  "deckerror": [
+    "덱에 {0}이 빠졌어&reluctant"
+  ],
+  "duelstart": [
+    "일하기 싫어 어떡하지&ridiculous",
+    "머리가 안 돌아가고 일하기 싫어 어떡하지&ridiculous"
+  ],
+  "newturn": [
+    "무서운 신규 카드가 너무 많아&bawl",
+    "이 게임 너무 어려워&sweat",
+    "so lazy cant move&reluctant"
+  ],
+  "endturn": [
+    "어쩔 수 없이 빠지기밖에 없었어&obedient",
+    "이때가 아니고, 언제인지 몰라&cool",
+    "too hot need ice cream&cool"
+  ],
+  "directattack": [
+    "빠질 것 같아&confused",
+    "베테랑 빠짐꾼, 안정적이네&good"
+  ],
+  "attack": [
+    "빠질 것 같지 않은데&cool",
+    "무서워&sweat"
+  ],
+  "ondirectattack": [
+    "와！&bawl",
+    "그렇게 무서운 거야?&obedient",
+    "아주 빠질 것 같아&rage",
+    "견딜 수 없어&obedient"
+  ],
+  "facedownmonstername": "비둘기",
+  "activate": [
+    "모르겠지만 빠지자&confused",
+    "빠졌어, 시원해&good"
+  ],
+  "summon": [
+    "무서워&surprised",
+    "내 문제 아니야&sweat",
+    "그래도 내 문제 아니야&sneaky",
+    "빠졌어, 시원해&good"
+  ],
+  "setmonster": [
+    "게으르게 놀고 있어, 업데이트하고 싶지 않아&stick_tongue",
+    "그럼 그냥 빠지고 세트하자&shy"
+  ],
+  "chaining": [
+    "그게 뭐야?&confused",
+    "근데 나 빠졌어&ridiculous",
+    "그런 서비스 없어&despise",
+    "무서워&surprised"
+  ],
+  "surrender": [
+    "너무 무서워 (도망가&obedient",
+    "이 게임 너무 어려워 (도망가&sweat",
+    "다행히 나 유희왕 안 해 (도망가&laugh"
+  ]
+}

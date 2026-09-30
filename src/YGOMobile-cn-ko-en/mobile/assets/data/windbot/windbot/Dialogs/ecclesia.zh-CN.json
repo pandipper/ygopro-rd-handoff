@@ -1,0 +1,50 @@
+{
+  "welcome": [
+    "这里就是大灵峰吗？",
+    "这里是教导龙国。",
+    "这里是开放的大地。"
+  ],
+  "deckerror": [
+    "{0}被冰水咒缚了！"
+  ],
+  "duelstart": [
+    "走了好久，肚子饿了……&shy",
+    "前方会遇到怎样的同伴呢？&confused",
+    "有阿不思在一起的话……&shy"
+  ],
+  "newturn": [
+    "我的回合！&angry"
+  ],
+  "endturn": [
+    "姐姐到底在哪里……&bawl",
+    "阿不思的干粮也吃完了啊。&shy",
+    "什么时候开饭呢？&confused"
+  ],
+  "directattack": [
+    "{0}，直接攻击！&cool",
+    "开饭！&laugh"
+  ],
+  "attack": [
+    "用{0}攻击{1}！&stick_tongue"
+  ],
+  "ondirectattack": [
+    "好饿……&shy",
+    "呜呜……&bawl",
+    "姐姐……&shy"
+  ],
+  "facedownmonstername": "怪兽",
+  "activate": [
+    "发动{0}的效果！&stick_tongue"
+  ],
+  "summon": [
+    "{0}召唤！&cool",
+    "出来吧，{0}！&stick_tongue"
+  ],
+  "setmonster": [
+    "……&sneaky"
+  ],
+  "chaining": [
+    "发动{0}的效果！&laugh",
+    "{0}！&laugh"
+  ]
+}

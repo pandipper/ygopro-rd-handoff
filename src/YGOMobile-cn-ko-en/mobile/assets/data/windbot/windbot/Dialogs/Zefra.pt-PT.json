@@ -1,0 +1,59 @@
+{
+  "welcome": [
+    "Ei, duelista de cartas!",
+    "Olá, bem-vindo a brincar de cartas comigo!"
+  ],
+  "deckerror": [
+    "Desculpe, meu deck precisa de {0} para brincar."
+  ],
+  "duelstart": [
+    "Hehe, vou te derrotar com o Irmão Segundo. &ridiculous",
+    "Meu deck não é ruim, só escondi algumas Cartas Proibidas~&stick_tongue",
+    "Eu só sei brincar com decks simples, não use Cartas Proibidas contra mim~&shy"
+  ],
+  "newturn": [
+    "Minha vez! Comprar! (Só pra tirar do bolso do calção) &ridiculous",
+    "Eu compro uma carta&cool"
+  ],
+  "endturn": [
+    "Acabei de brincar, sua vez&stick_tongue",
+    "É sua vez agora~ Seria um duelo multithread? &confused"
+  ],
+  "directattack": [
+    "{0}, ataque o oponente! &reluctant",
+    "{0}, esmague-o em pedaços! &rage",
+    "{0}, socoe-o com punhos pequenos!&stick_tongue"
+  ],
+  "attack": [
+    "{0}, derrote {1}! &good",
+    "Hehe, {0}, ataque {1}! &reluctant"
+  ],
+  "ondirectattack": [
+    "Ah, não me bata! Vou deixar você brincar com minhas Cartas Proibidas~&shy",
+    "Uau, você é tão forte! Pode me levar na sua mira?&obedient",
+    "Dói... Quero desconectar a tomada&bawl"
+  ],
+  "facedownmonstername": "Monstro",
+  "activate": [
+    "Hehe, eu ativo {0}&reluctant",
+    "Gargalhada, eu uso o poder de {0}&laugh"
+  ],
+  "summon": [
+    "Eu invoco (tiro) {0}!&ridiculous",
+    "Venha, meu pequeno monstro {0}! &laugh"
+  ],
+  "setmonster": [
+    "Eu coloco um monstro desconhecido. &stick_tongue"
+  ],
+  "chaining": [
+    "Ei, bravo por eu usar Cartas Proibidas? &ridiculous",
+    "Hmph, eu ativo {0}! &cool",
+    "Ops, eu tenho {0}&reluctant",
+    "Hahaha, ative o efeito de {0}! &stick_tongue"
+  ],
+  "custom": [
+    "Quack! O corpo principal marchando! &cool",
+    "凸(艹皿艹 ) Sem jogadas, desisto!!!&bawl",
+    "Ei, não entre em pânico, ainda tenho um campo de stall (￣y▽￣)╭&ridiculous"
+  ]
+}

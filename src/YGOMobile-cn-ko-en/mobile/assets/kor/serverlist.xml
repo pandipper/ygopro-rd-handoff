@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<servers>
+    <version>2</version>
+
+    <server>
+        <player-name>신선한 고기</player-name>
+        <name>Mycard_Superpre☆needs download expansions</name>
+        <desc>mycard‘s server within expansions cards</desc>
+        <ip>mygo.superpre.pro</ip>
+        <port>888</port>
+        <keep>true</keep>
+    </server>
+    <server>
+        <player-name>신선한 고기</player-name>
+        <name>Mycard_Superpre☆needs download expansions</name>
+        <desc>mycard‘s server within expansions cards</desc>
+        <ip>mygo2.superpre.pro</ip>
+        <port>888</port>
+        <keep>true</keep>
+    </server>
+    <server>
+        <player-name>Knight of Hanoi</player-name>
+        <name>GENESYS 포맷 정식 서버</name>
+        <desc>GENESYS 포인트표 기준 제한 적용하여 덱 구성. TCG 환경</desc>
+        <ip>e.ygo.pro</ip>
+        <port>13518</port>
+        <keep>true</keep>
+    </server>
+    <server>
+        <player-name>신선한 고기</player-name>
+        <name>YGOPRO 중국 서버 1</name>
+        <desc>unknow upgrade time</desc>
+        <ip>s1.ygo233.com</ip>
+        <port>233</port>
+        <keep>true</keep>
+    </server>
+    <server>
+        <player-name>신선한 고기</player-name>
+        <name>듀얼 크로니클즈</name>
+        <desc>use random deck to duel</desc>
+        <ip>2333.duelstart.com</ip>
+        <port>2333</port>
+        <keep>true</keep>
+    </server>
+</servers>

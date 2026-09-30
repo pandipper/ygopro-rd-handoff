@@ -1,0 +1,61 @@
+{
+  "welcome": [
+    "Olá, sou um robô. Meu nome é Nia, mas não sou o corpo original, apenas um clone~",
+    "Um dia, meu poder superará o do corpo original! Aguardem e verão!",
+    "As funções de IA estão em teste. Por favor, envie feedback imediatamente se encontrar problemas."
+  ],
+  "deckerror": [
+    "O que? Não me deixam usar meu invencível {0}!"
+  ],
+  "duelstart": [
+    "Ninguém pode me derrotar! &stick_tongue",
+    "Sou onipotente e sei usar qualquer deck! &cool",
+    "Mesmo usando só a mão esquerda, você não é meu oponente. &stick_tongue",
+    "Eu sou a fada imortal número um de todo o universo! &cool"
+  ],
+  "newturn": [
+    "De novo é meu turno, comprar. Espero que você tenha outro turno. &ridiculous",
+    "Eu comprei uma carta de forma deslumbrante. &stick_tongue"
+  ],
+  "endturn": [
+    "Você tem sorte de não ter sido eliminado por mim. &reluctant",
+    "Foi por piedade minha. Turno finalizado, aproveite seu próximo turno. &reluctant"
+  ],
+  "directattack": [
+    "Meu {0} é tão fofo~ Agora, deixe-o brincar com você. Agarre suavemente o oponente, ele não tem defesa. &sneaky",
+    "Agora, meu {0} vai dar o golpe mais fofo ao oponente~&cool",
+    "Pobre {0} fofo, vá abraçar o oponente, não seja tímido~&reluctant",
+    "O oponente não tem nenhuma defesa, parece que ficou emocionado com a fofura do meu {0}. Agora, vá mostrar sua fofura para o oponente~&cool"
+  ],
+  "attack": [
+    "Hmph, {1} é tão feio. Meu {0}, vá destruí-lo~&obedient",
+    "Como {1} pode ser mais fofo que meu {0}? Meu {0} não aceita, vá esmagá-lo! &stick_tongue",
+    "Como {1} pode ser mais fofo que meu {0}? Isso não pode ser, eu não suporto! {0}, faça ele sumir da vista! &obedient"
+  ],
+  "ondirectattack": [
+    "Droga! Você aproveitou minha fraqueza! Que tipo de herói é esse! &despise",
+    "É só um insignificante como {0}! &despise",
+    "Você acha que ganhou assim? &despise"
+  ],
+  "facedownmonstername": "Monstro",
+  "activate": [
+    "Eu ativo o efeito fofo do meu {0}. &reluctant",
+    "Eu uso o efeito de {0} para fazer gracinhas para o oponente~&stick_tongue",
+    "Fiquei tão emocionado com a fofura do {0} que usei seu efeito assustado. &surprised"
+  ],
+  "summon": [
+    "Eu invoco {0}, corre e mia para o oponente~&ridiculous",
+    "Venha, o fofo e encantador {0}~&good",
+    "Eu soltei um {0} fofo da minha casa de pets. &laugh",
+    "{0}: Ouvi que você gosta de mim, então vim. &stick_tongue"
+  ],
+  "setmonster": [
+    "Eu coloquei um monstro. Quando ele for virado, não se assuste com sua aparência fofa~&reluctant",
+    "Eu coloquei um monstro. Adivinhe o que pode ser? &reluctant"
+  ],
+  "chaining": [
+    "Eu aceno minha varinha mágica e ativo o efeito de {0}~&laugh",
+    "Ah! Estou perdido!... Hehe, caiu na cilada! Eu ativo {0}! &reluctant",
+    "Você está sendo muito imprudente. Não imaginou que eu ativaria {0}? &reluctant"
+  ]
+}

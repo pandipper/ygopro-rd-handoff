@@ -1,0 +1,627 @@
+package cn.garymb.ygomobile.ui.home;
+
+import static cn.garymb.ygomobile.Constants.ID1;
+import static cn.garymb.ygomobile.Constants.ID2;
+import static cn.garymb.ygomobile.Constants.ID3;
+import static cn.garymb.ygomobile.Constants.URL_GENESYS_LFLIST_DOWNLOAD_LINK;
+import static cn.garymb.ygomobile.Constants.URL_HOME_VERSION;
+import static cn.garymb.ygomobile.Constants.URL_HOME_VERSION_ALT;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.ashokvarma.bottomnavigation.ShapeBadgeItem;
+import com.ashokvarma.bottomnavigation.TextBadgeItem;
+import com.ourygo.lib.duelassistant.service.DuelAssistantService;
+import com.tencent.smtt.export.external.TbsCoreSettings;
+import com.tencent.smtt.sdk.QbSdk;
+
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import cn.garymb.ygomobile.AppsSettings;
+import cn.garymb.ygomobile.Constants;
+import cn.garymb.ygomobile.lite.BuildConfig;
+import cn.garymb.ygomobile.lite.R;
+import cn.garymb.ygomobile.loader.CardLoader;
+import cn.garymb.ygomobile.loader.ImageLoader;
+import cn.garymb.ygomobile.ui.activities.BaseActivity;
+import cn.garymb.ygomobile.ui.cards.CardSearchFragment;
+import cn.garymb.ygomobile.ui.cards.DeckManagerFragment;
+import cn.garymb.ygomobile.ui.mycard.arena.DeckWinRateFragment;
+import cn.garymb.ygomobile.ui.mycard.MyCardWebFragment;
+import cn.garymb.ygomobile.ui.mycard.MycardFragment;
+import cn.garymb.ygomobile.ui.mycard.arena.MycardDuelArenaFragment;
+import cn.garymb.ygomobile.ui.mycard.mcchat.MycardChatFragment;
+import cn.garymb.ygomobile.ui.plus.DialogPlus;
+import cn.garymb.ygomobile.ui.settings.SettingFragment;
+import cn.garymb.ygomobile.utils.DownloadUtil;
+import cn.garymb.ygomobile.utils.LogUtil;
+import cn.garymb.ygomobile.utils.OkhttpUtil;
+import cn.garymb.ygomobile.utils.ScreenUtil;
+import cn.garymb.ygomobile.utils.ServerUtil;
+import cn.garymb.ygomobile.utils.SharedPreferenceUtil;
+import cn.garymb.ygomobile.utils.YGOUtil;
+import ocgcore.DataManager;
+import ocgcore.LimitManager;
+import ocgcore.StringManager;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+public abstract class HomeActivity extends BaseActivity implements BottomNavigationBar.OnTabSelectedListener {
+    private static final String TAG = "HomeActivity";
+    private static final int TYPE_GET_VERSION_OK = 0;
+    private static final int TYPE_GET_VERSION_FAILED = 1;
+    private static final int TYPE_DOWNLOAD_GENESYS_LFLIST_OK = 2;
+    private static final int TYPE_DOWNLOAD_GENESYS_LFLIST_ING = 3;
+    private static final int TYPE_DOWNLOAD_GENESYS_LFLIST_FAILED = 4;
+    public static String Version;
+    public static String Update_time;
+    public static String Cache_link;
+    public static String Cache_pre_release_code;
+    public static List<Integer> pre_code_list = new ArrayList<>();
+    public static List<Integer> released_code_list = new ArrayList<>();
+    public HomeFragment fragment_home;
+    public CardSearchFragment fragment_search;
+    public DeckManagerFragment fragment_deck_cards;
+    public MycardFragment fragment_mycard;
+    public SettingFragment fragment_settings;
+    public MycardChatFragment fragment_mycard_chatting_room;
+    public MyCardWebFragment fragment_mycard_web;
+    public MycardDuelArenaFragment fragment_duel_arena;
+    long exitLasttime = 0;
+    private CardLoader cardLoader;
+    private ImageLoader imageLoader;
+    private BottomNavigationBar bottomNavigationBar;
+    private ShapeBadgeItem mShapeBadgeItem;
+    private TextBadgeItem mTextBadgeItem;
+    private FrameLayout frameLayout;
+    private Fragment mFragment;
+    private Bundle mBundle;
+    private int FailedCount;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            savedInstanceState.putParcelable("android:support:fragments", null);
+        }
+        super.onCreate(savedInstanceState);
+        cardLoader = new CardLoader();
+        imageLoader = new ImageLoader();
+        setContentView(R.layout.activity_home);
+        setExitAnimEnable(false);
+        mBundle = new Bundle();
+        //
+        initQbSdk();
+        //
+        checkNotch();
+        checkUpgrade(URL_HOME_VERSION);
+        downloadGeneSysLflist();
+        //showNewbieGuide("homePage");
+        initBottomNavigationBar();
+        onNewIntent(getIntent());
+        ServerUtil.initExCardState();//检查扩展卡版本
+        // 初始化用户唯一码
+        SharedPreferenceUtil.initUserUniqueId();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {//TODO 需要适配Api35
+            SharedPreferenceUtil.setImmersiveMode(true);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //activity被回收后直接清除所有Bundle
+        outState.clear();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int mFlag = intent.getIntExtra("flag", 0);
+        if (mFlag == 4) { //判断获取到的flag值
+            switchSettingFragment();
+        } else if (mFlag == 3) {
+            switchFragment(fragment_mycard, 3, false);
+        } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
+            String strDeck = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (!strDeck.isEmpty()) {
+                mBundle.putString("setDeck", strDeck);
+                fragment_deck_cards.setArguments(mBundle);
+            }
+            switchFragment(fragment_deck_cards, 2, true);
+        } else if (mFlag == 1) {
+            switchFragment(fragment_search, 1, false);
+        }
+    }
+
+    private void initBottomNavigationBar() {
+        frameLayout = findViewById(R.id.fragment_content);
+        // 获取页面上的底部导航栏控件
+        bottomNavigationBar = findViewById(R.id.bottom_navigation_bar);
+        bottomNavigationBar
+                .addItem(new BottomNavigationItem(R.drawable.home, R.string.mc_home))
+                .addItem(new BottomNavigationItem(R.drawable.searcher, R.string.card_search))
+                .addItem(new BottomNavigationItem(R.drawable.deck, R.string.deck_manager))
+                .addItem(new BottomNavigationItem(R.drawable.mycard, R.string.mycard).setBadgeItem(mTextBadgeItem))
+                .addItem(new BottomNavigationItem(R.drawable.my, R.string.personal))
+                .setActiveColor(R.color.holo_blue_bright)
+                .setBarBackgroundColor(R.color.transparent)
+                .setMode(BottomNavigationBar.MODE_FIXED)
+                .setFirstSelectedPosition(0)
+                .initialise();//所有的设置需在调用该方法前完成
+
+        bottomNavigationBar.setTabSelectedListener(this);
+        fragment_home = new HomeFragment();
+        fragment_search = new CardSearchFragment();
+        fragment_deck_cards = new DeckManagerFragment();
+        fragment_mycard = new MycardFragment();
+        fragment_settings = new SettingFragment();
+
+        fragment_mycard_chatting_room = new MycardChatFragment();
+        fragment_duel_arena = new MycardDuelArenaFragment();
+        fragment_mycard_web = new MyCardWebFragment();
+
+        mFragment = fragment_home;
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                        R.anim.push_in, R.anim.push_out)
+                .add(R.id.fragment_content, fragment_home).commit();
+        getSupportActionBar().hide();
+    }
+
+    private void showNewsCounts() {
+        mTextBadgeItem = new TextBadgeItem()
+                .setBorderWidth(4)//文本大小
+                .setGravity(Gravity.LEFT)//位置 默认右上
+                .setBackgroundColorResource(R.color.holo_orange_bright)//背景颜色
+                .setAnimationDuration(200)//动画时间
+                .setText("3")
+                .setHideOnSelect(false)//true当选中状态时消失，非选中状态再次显示
+                .show();
+    }
+
+    @SuppressLint("HandlerLeak")
+    Handler handlerHome = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case TYPE_GET_VERSION_OK:
+                    parseVersionJson(msg.obj.toString());
+                    break;
+                case TYPE_GET_VERSION_FAILED:
+                    ++FailedCount;
+                    if (FailedCount <= 2) {
+                        checkUpgrade(URL_HOME_VERSION_ALT);
+                    }
+                    break;
+                case TYPE_DOWNLOAD_GENESYS_LFLIST_OK:
+                    LogUtil.d(TAG, "download_genesys_lflist_OK");
+                    break;
+                case TYPE_DOWNLOAD_GENESYS_LFLIST_ING:
+
+                    break;
+                case TYPE_DOWNLOAD_GENESYS_LFLIST_FAILED:
+                    LogUtil.d(TAG, "download_genesys_lflist_FAILED");
+                    break;
+            }
+
+        }
+    };
+
+    @Override
+    public void onTabSelected(int position) {
+        switch (position) {
+            case 0:
+                switchFragment(fragment_home, position, false);
+                break;
+            case 1:
+                switchFragment(fragment_search, position, false);
+                break;
+            case 2:
+                switchFragment(fragment_deck_cards, position, false);
+                break;
+            case 3:
+                switchFragment(fragment_mycard, position, false);
+                break;
+            case 4:
+                switchSettingFragment();
+                break;
+        }
+    }
+
+    @SuppressLint("ResourceType")
+    public void switchSettingFragment() {
+        bottomNavigationBar.setFirstSelectedPosition(4).initialise();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                        R.anim.push_in, R.anim.push_out)
+                .hide(mFragment).commit();
+        if (fragment_settings.isAdded()) {
+            if (fragment_settings.isHidden()) {
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                                R.anim.push_in, R.anim.push_out)
+                        .show(fragment_settings).commit();
+            }
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                            R.anim.push_in, R.anim.push_out)
+                    .add(R.id.fragment_content, fragment_settings).commit();
+        }
+
+    }
+
+    @SuppressLint("ResourceType")
+    public void switchFragment(Fragment fragment, int page, boolean replace) {
+        if (fragment_settings != null && fragment_settings.isAdded() && !fragment_settings.isHidden())
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                            R.anim.push_in, R.anim.push_out)
+                    .hide(fragment_settings).commit();
+        bottomNavigationBar.setFirstSelectedPosition(page).initialise();
+        if (mFragment.isHidden())
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                            R.anim.push_in, R.anim.push_out)
+                    .show(mFragment).commit();
+        if (mFragment != fragment) {
+            if (!fragment.isAdded()) {
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                                R.anim.push_in, R.anim.push_out)
+                        .hide(mFragment)
+                        .add(R.id.fragment_content, fragment).commit();
+            } else {
+                if (replace) {
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                                    R.anim.push_in, R.anim.push_out)
+                            .hide(mFragment).detach(fragment).attach(fragment)
+                            .show(fragment)
+                            .commit();
+                } else {
+                    getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                                    R.anim.push_in, R.anim.push_out)
+                            .hide(mFragment).show(fragment).commit();
+                }
+            }
+            mFragment = fragment;
+        } else {
+            if (replace) {
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.push_in, R.anim.push_out,
+                                R.anim.push_in, R.anim.push_out)
+                        .hide(mFragment).detach(fragment).attach(fragment)
+                        .show(fragment)
+                        .commit();
+            }
+        }
+    }
+
+    private void initQbSdk() {
+        HashMap map = new HashMap();
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
+        QbSdk.initTbsSettings(map);
+        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
+            @Override
+            public void onViewInitFinished(boolean arg0) {
+                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+                if (arg0) {
+                    //Toast.makeText(getActivity(), "加载X5内核成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    //Toast.makeText(getActivity(), "加载系统内核成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCoreInitFinished() {
+            }
+        };
+        //x5内核初始化接口
+        QbSdk.initX5Environment(this, cb);
+        if (!BuildConfig.BUILD_TYPE.equals("debug")) {
+            //release才检查版本
+            if (!Constants.ACTION_OPEN_GAME.equals(getIntent().getAction())) {
+                //Beta.checkUpgrade(false, false);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ServerUtil.initExCardState();//检查扩展卡版本
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    public CardLoader getCardLoader() {
+        return cardLoader;
+    }
+
+    public ImageLoader getImageLoader() {
+        return imageLoader;
+    }
+
+    public StringManager getStringManager() {
+        return DataManager.get().getStringManager();
+    }
+
+    public LimitManager getmLimitManager() {
+        return DataManager.get().getLimitManager();
+    }
+
+    //检查是否有刘海
+    private void checkNotch() {
+        ScreenUtil.findNotchInformation(HomeActivity.this, new ScreenUtil.FindNotchInformation() {
+            @Override
+            public void onNotchInformation(boolean isNotch, int notchHeight, int phoneType) {
+                AppsSettings.get().setNotchHeight(notchHeight);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public HomeActivity getActivity() {
+        return this;
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fragment_mycard.isVisible() && fragment_mycard.onBackPressed())
+            return;
+        if (fragment_search.isVisible() && fragment_search.onBackPressed())
+            return;
+        if (fragment_deck_cards.isVisible() && fragment_deck_cards.onBackPressed())
+            return;
+
+        if (System.currentTimeMillis() - exitLasttime <= 3000) {
+            super.onBackPressed();
+        } else {
+            exitLasttime = System.currentTimeMillis();
+            if (fragment_home.isVisible() || fragment_settings.isVisible())
+                YGOUtil.showTextToast(R.string.back_tip);
+        }
+    }
+
+    protected abstract void checkResourceDownload(ResCheckTask.ResCheckListener listener);
+
+    protected abstract void openGame();
+
+    public void checkUpgrade(String url) {
+        OkhttpUtil.get(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what = TYPE_GET_VERSION_FAILED;
+                message.obj = e;
+                handlerHome.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                Message message = new Message();
+                message.what = TYPE_GET_VERSION_OK;
+                message.obj = json;
+                handlerHome.sendMessage(message);
+            }
+        });
+    }
+
+    private void arrangeCodeList(String code) {
+        BufferedReader br = new BufferedReader(new StringReader(code));
+        try {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] words = line.trim().split("[\t ]+");
+                pre_code_list.add(Integer.valueOf(words[0]));
+                released_code_list.add(Integer.valueOf(words[1]));
+
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG, e + "");
+        } finally {
+        }
+    }
+
+    private void parseVersionJson(String jsonStr) {
+        try {
+            JSONObject json = new JSONObject(jsonStr);
+            Version = json.optString("versionname");
+            Update_time = json.optString("update_time");
+            JSONArray downloadLink = json.optJSONArray("download_link");
+            if (downloadLink != null && downloadLink.length() > 0) {
+                Cache_link = downloadLink.optString(0);
+            }
+            JSONObject preReleaseCode = json.optJSONObject("pre_release_code");
+            if (preReleaseCode != null && preReleaseCode.length() > 0) {
+                StringBuilder sb = new StringBuilder();
+                Iterator<String> keys = preReleaseCode.keys();
+                while (keys.hasNext()) {
+                    String preCode = keys.next();
+                    sb.append(preCode).append(" ").append(preReleaseCode.optString(preCode)).append("\n");
+                }
+                Cache_pre_release_code = sb.toString();
+            }
+            if (!TextUtils.isEmpty(Cache_pre_release_code)) {
+                pre_code_list.clear();
+                released_code_list.clear();
+                arrangeCodeList(Cache_pre_release_code);
+            }
+            if (!TextUtils.isEmpty(Version) && !TextUtils.isEmpty(Cache_link)
+                    && Version.compareTo(BuildConfig.VERSION_NAME) > 0) {
+                DialogPlus dialog = new DialogPlus(getActivity());
+                dialog.setMessage(R.string.Found_Update);
+                dialog.setLeftButtonText(R.string.download_home);
+                dialog.setLeftButtonListener((dlg, s) -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(Cache_link));
+                    startActivity(intent);
+                    dialog.dismiss();
+                });
+                dialog.show();
+            }
+        } catch (JSONException e) {
+            Log.e(Constants.TAG, "parse version json error: " + e);
+        }
+    }
+
+    private void downloadGeneSysLflist() {
+        File geneSysLflist = new File(AppsSettings.get().getExpansionsPath(), Constants.CORE_GENESYS_LIMIT_PATH);
+        DownloadUtil.get().download(URL_GENESYS_LFLIST_DOWNLOAD_LINK, geneSysLflist.getParent(), geneSysLflist.getName(), new DownloadUtil.OnDownloadListener() {
+            @Override
+            public void onDownloadSuccess(File file) {
+                Message message = new Message();
+                message.what = TYPE_DOWNLOAD_GENESYS_LFLIST_OK;
+                message.arg1 = geneSysLflist.hashCode();
+                handlerHome.sendMessage(message);
+            }
+
+            @Override
+            public void onDownloading(int progress) {
+                Message message = new Message();
+                message.what = TYPE_DOWNLOAD_GENESYS_LFLIST_ING;
+                message.arg1 = progress;
+                handlerHome.sendMessage(message);
+            }
+
+            @Override
+            public void onDownloadFailed(Exception e) {
+                Log.w(TAG, "download genesys lflist error:" + e.getMessage());
+
+                Message message = new Message();
+                message.what = TYPE_DOWNLOAD_GENESYS_LFLIST_FAILED;
+                message.obj = e.toString();
+                handlerHome.sendMessage(message);
+            }
+        });
+    }
+
+
+    // 带回调的隐私政策对话框方法
+    public void showPrivacyPolicyDialogWithCallback(SettingFragment.PrivacyPolicyCallback callback) {
+        DialogPlus dialogPlus = new DialogPlus(getContext())
+                .setTitleText(getString(R.string.user_privacy_policy))
+                .setLeftButtonText(R.string.reject)  // 拒绝按钮
+                .setRightButtonText(R.string.agree) // 同意按钮
+                .setOnCloseLinster(null); // 禁止通过关闭按钮退出
+
+        // 根据系统语言加载特定的隐私政策文件
+        String language = getContext().getResources().getConfiguration().locale.getLanguage();
+        String fileaddr = "";
+        if (!language.isEmpty()) {
+            if (language.equals(AppsSettings.languageEnum.Chinese.name)) {
+                fileaddr = "file:///android_asset/user_Privacy_Policy_CN.html";
+            } else if (language.equals(AppsSettings.languageEnum.Korean.name)) {
+                fileaddr = "file:///android_asset/user_Privacy_Policy_KO.html";
+            } else if (language.equals(AppsSettings.languageEnum.Spanish.name)) {
+                fileaddr = "file:///android_asset/user_Privacy_Policy_ES.html";
+            } else if (language.equals(AppsSettings.languageEnum.Japanese.name)) {
+                fileaddr = "file:///android_asset/user_Privacy_Policy_JP.html";
+            } else if (language.equals(AppsSettings.languageEnum.Portuguese.name)) {
+                fileaddr = "file:///android_asset/user_Privacy_Policy_PT.html";
+            } else {
+                fileaddr = "file:///android_asset/user_Privacy_Policy_EN.html";
+            }
+        }
+
+        // 加载URL，这样会初始化WebView并设置默认的按钮监听器
+        dialogPlus.loadUrl(fileaddr, Color.TRANSPARENT);
+
+        // 在loadUrl之后按钮监听器，覆盖默认的监听器，才能实现自定义的监听方法
+        dialogPlus.setRightButtonListener((dlg, i) -> {
+            // 用户同意隐私政策
+            SharedPreferenceUtil.setPrivacyPolicyAgreed(true);
+            SharedPreferenceUtil.setFirstStart(false);
+
+            AppsSettings.get().setServiceDuelAssistant(true);
+
+            // 启动决斗助手服务
+            Intent serviceIntent = new Intent(getContext(), DuelAssistantService.class);
+            getContext().startService(serviceIntent);
+
+            // 通知设置Fragment更新UI
+            if (fragment_settings != null && fragment_settings.isAdded()) {
+                // 通过EventBus或其他方式通知Fragment更新checkbox状态
+                EventBus.getDefault().post(new SettingFragment.PrivacyPolicyAgreedEvent(true));
+            }
+
+            if (callback != null) {
+                callback.onPrivacyPolicyResult(true);
+            }
+            dlg.dismiss();
+        });
+
+        dialogPlus.setLeftButtonListener((dlg, i) -> {
+            // 用户拒绝隐私政策
+            if (callback != null) {
+                callback.onPrivacyPolicyResult(false);
+            }
+            dlg.dismiss();
+        });
+
+        dialogPlus.show();
+    }
+
+}

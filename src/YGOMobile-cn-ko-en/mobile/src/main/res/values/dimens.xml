@@ -1,0 +1,132 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="label_width_small_32dp">32dp</dimen>
+    <dimen name="label_width_small">40dp</dimen>
+    <dimen name="label_width_50dp">50dp</dimen>
+    <dimen name="label_width_middle">60dp</dimen>
+    <dimen name="label_width">75dp</dimen>
+    <dimen name="label_height">32dp</dimen>
+    <dimen name="title_height_small">38dp</dimen>
+    <dimen name="title_height">55dp</dimen>
+    <dimen name="item_height2">70dp</dimen>
+    <dimen name="item_height">48dp</dimen>
+    <dimen name="item_and_text_height">68dp</dimen>
+    <dimen name="button_width_small">40dp</dimen>
+    <dimen name="button_width">80dp</dimen>
+    <dimen name="card_small_width">70dp</dimen>
+    <dimen name="card_small_height">102dp</dimen>
+    <dimen name="card_width_middle">118dp</dimen>
+    <dimen name="card_height_middle">169dp</dimen>
+    <dimen name="card_width">177dp</dimen>
+    <dimen name="card_height">254dp</dimen>
+    <dimen name="card_width2">145dp</dimen>
+    <dimen name="card_height2">210dp</dimen>
+    <dimen name="card_desc_height">140dp</dimen>
+    <dimen name="right_size">20dp</dimen>
+    <dimen name="right_size2">14dp</dimen>
+    <dimen name="card_def_width">44dp</dimen>
+    <dimen name="card_def_height">64dp</dimen>
+    <dimen name="deck_label_left">4dp</dimen>
+    <dimen name="deck_label_height">24dp</dimen>
+    <dimen name="deck_label_text">6sp</dimen>
+    <dimen name="card_padding">1dp</dimen>
+    <dimen name="padding">4dp</dimen>
+    <dimen name="padding2">8dp</dimen>
+    <dimen name="list_height">240dp</dimen>
+    <dimen name="nav_head_height">150dp</dimen>
+    <dimen name="nav_icon_width">100dp</dimen>
+    <dimen name="nav_icon_height">100dp</dimen>
+    <dimen name="logo_size">160dp</dimen>
+    <dimen name="cardinfo_title_height">58dp</dimen>
+
+    <dimen name="drag_rect">4dp</dimen>
+
+    <dimen name="item_menu_width">80dp</dimen>
+    <dimen name="item_menu_height">80dp</dimen>
+    <dimen name="brower_arrow_width">20dp</dimen>
+    <dimen name="brower_arrow_height">100dp</dimen>
+    <dimen name="menu_text_size">6dp</dimen>
+    <dimen name="menu_text_top">-5dp</dimen>
+
+    <!--重设底部导航栏尺寸BottomNavigationBar-->
+    <dimen name="fixed_min_width">120dp</dimen>
+    <dimen name="fixed_min_width_small_views">104dp</dimen>
+    <dimen name="fixed_max_width">168dp</dimen>
+    <dimen name="fixed_width_padding">12dp</dimen>
+
+    <dimen name="fixed_height">60dp</dimen>
+    <dimen name="fixed_height_top_padding_inactive">2dp
+    </dimen><!-- 8(Top Padding) - 12/2(extra padding due to badges) = 2 -->
+    <dimen name="fixed_height_top_padding_active">0dp
+    </dimen><!-- 6(Top Padding) - 12/2(extra padding due to badges) = 0 -->
+    <dimen name="fixed_height_bottom_padding">2dp</dimen>
+
+    <dimen name="fixed_label_active">12sp</dimen><!--底部文字被选中时的尺寸-->
+    <dimen name="fixed_label_inactive">10sp</dimen><!--底部文字未被选中时的尺寸-->
+    <item name="fixed_label_active_to_inactive_ratio" format="float" type="dimen">0.857</item>
+
+    <dimen name="fixed_icon_grid">40dp</dimen><!--底部图标尺寸-->
+    <dimen name="fixed_icon_badge_grid_height">48dp
+    </dimen><!-- this adds 6 dp extra to top and bottom icon -->
+    <dimen name="fixed_icon_badge_grid_width">48dp
+    </dimen><!-- this adds 6 dp extra to top and bottom icon -->
+
+
+    <dimen name="shifting_min_width_active">96dp</dimen>
+    <dimen name="shifting_max_width_active">168dp</dimen>
+    <dimen name="shifting_min_width_inactive">64dp</dimen>
+    <dimen name="shifting_max_width_inactive">96dp</dimen>
+    <dimen name="shifting_width_custom_padding">6dp</dimen>
+
+    <dimen name="shifting_height">60dp</dimen>
+    <dimen name="shifting_height_bottom_padding_inactive">16dp
+    </dimen><!-- not used because in inactive state text-view will be hidden and for icon top padding would be enough -->
+    <dimen name="shifting_height_bottom_padding_active">10dp</dimen>
+    <dimen name="shifting_height_top_padding_active">0dp
+    </dimen><!-- 6(Top padding) - 12/2(extra padding due to badges) = 0 -->
+    <dimen name="shifting_height_top_padding_inactive">5dp
+    </dimen><!-- 56(total) - 24(icon) - 16(bottom padding inactive) = 16 ||| 16 - 12/2(extra padding due to badges)  = 10-->
+
+    <dimen name="shifting_label">14sp</dimen>
+
+
+    <dimen name="shifting_icon_grid">24dp</dimen>
+    <dimen name="shifting_icon_badge_grid_height">36dp</dimen>
+    <dimen name="shifting_icon_badge_grid_width">48dp</dimen>
+
+    <dimen name="bottom_navigation_elevation">8dp</dimen>
+    <dimen name="bottom_navigation_height">60dp</dimen>
+    <dimen name="bottom_navigation_padded_height">68dp</dimen>
+    <dimen name="bottom_navigation_top_margin_correction">-8dp</dimen><!-- 64 - 56 = 8 -->
+
+    <dimen name="badge_text_size">12sp</dimen><!-- 10 -->
+    <dimen name="badge_corner_radius">13dp</dimen><!-- 15 -->
+    <dimen name="badge_width_padding">4dp</dimen><!-- 4 -->
+    <dimen name="badge_height_padding">1dp</dimen><!-- 1 -->
+    <dimen name="badge_top_margin">2dp</dimen><!-- 2 -->
+
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+
+    <dimen name="tab_normal_text_size_m">12sp</dimen>
+    <dimen name="tab_select_text_size_m">20sp</dimen>
+
+    <dimen name="tab_normal_text_size_l">14sp</dimen>
+    <dimen name="tab_select_text_size_l">24sp</dimen>
+    <dimen name="mycard_rank_cpv_size">160dp</dimen>
+    <dimen name="mycard_rank_cpv_text_size">28sp</dimen>
+    <dimen name="mycard_rank_cpv_text_s_size">12sp</dimen>
+    <dimen name="mycard_rank_cpv_text_s_top_margin">57dp</dimen>
+    <dimen name="mycard_rank_cpv_width">16dp</dimen>
+    <dimen name="mycard_rank_icon_size">22dp</dimen>
+    <dimen name="mycard_rank_text_s_size">15sp</dimen>
+    <dimen name="mycard_win_icon_size">18dp</dimen>
+    <dimen name="mycard_lose_icon_size">18dp</dimen>
+    <dimen name="mycard_rank_text_size">16sp</dimen>
+    <dimen name="mycard_win_text_size">16sp</dimen>
+    <dimen name="mycard_lose_text_size">16sp</dimen>
+</resources>

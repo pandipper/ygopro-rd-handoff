@@ -1,0 +1,60 @@
+{
+  "welcome": [
+    "Sou a Xiaoye!",
+    "Eu sei jogar qualquer Deck de Pêndulo!",
+    "O que? Você disse que o Superpesado não é um Deck de Pêndulo?",
+    "Você também vai ser meu, obedientemente!",
+    "Siga \"Tem janta noite hoje?\" - decks top do Mengka Ladder mostrados mensalmente"
+  ],
+  "deckerror": [
+    "A quantidade de {0} está errada! Corra e mude para o Modo Sem Restrições!.",
+    "Minha juventude não pode ser desperdiçada em cartinhas {0}."
+  ],
+  "duelstart": [
+    "Vou mostrar o charme do Samurai Superpesado! &cool",
+    "Seu deck é bom, mas também vai ser meu! &ridiculous"
+  ],
+  "newturn": [
+    "Comprar! Benkei, não venha para a minha mão me salvar! &obedient",
+    "Comprar! P-corpo, não venha para a minha mão me salvar! &obedient",
+    "Tanto faz, eu vou tomar posse"
+  ],
+  "endturn": [
+    "Huhu, agora é o seu turno! &stick_tongue",
+    "Gostou do meu combo? &ridiculous",
+    "Boa sorte. &ridiculous"
+  ],
+  "directattack": [
+    "Eu uso {0} para ataque direto! &ridiculous",
+    "Vou te esmagar! &rage"
+  ],
+  "attack": [
+    "Eu uso {0} para atacar {1}! &stick_tongue"
+  ],
+  "ondirectattack": [
+    "Não me bata! Não me bata! &obedient",
+    "Uau! Vou ser derrotada~&bawl",
+    "6&bawl",
+    "Tão chulo? &obedient",
+    "Não aguento mais&obedient"
+  ],
+  "facedownmonstername": "Monstro",
+  "activate": [
+    "Huhu, o efeito de {0} é muito forte! &stick_tongue",
+    "Huhu, eu uso o efeito de {0}. &good"
+  ],
+  "summon": [
+    "Huhu, eu invoco {0}! &good"
+  ],
+  "setmonster": [
+    "Huhu, eu coloquei um monstro virado para baixo. &reluctant"
+  ],
+  "chaining": [
+    "Agora! Ative o efeito de {0}! &laugh",
+    "666! &obedient",
+    "O que significa? &confused",
+    "?&confused",
+    "Tudo isso por isso? &despise",
+    "O que você está falando? &confused"
+  ]
+}

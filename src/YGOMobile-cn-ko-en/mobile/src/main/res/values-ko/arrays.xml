@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="opengl_version_value" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="card_quality_value" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="tips" tools:ignore="InconsistentArrays">
+        <item>상대에 대한 예의를 지켜 게임을 즐기십시오.</item>
+        <item>게임중 터치의 정확도 떨어지시나요? 아래 과정을 따르십쇼「설정」→「디스플레이」→「NotchDisplay」→「Hide the notch area」</item>
+        <item>메인화면의 각 서버들은 좌측으로 밀어줄 경우 수정과 삭제가 가능합니다.</item>
+        <item>좌측 하단의 마크를 눌러줄 경우 더 많은 설정들을 확인할 수 있습니다.</item>
+        <item>ai대전을 원할 경우 각 서버의 비밀번호에 ai를 입력후 참여 하십시오.</item>
+        <item>이미지 파일이 없어졌을 경우 리소스 리셋 기능을 사용하십시오.</item>
+        <item>주변에서 같이 게임을 즐길 오프라인 친구들을 찾아 그룹을 만들어 보세요.</item>
+        <item>서버들의 오른쪽에 있는 마크를 통해 서버 우선순위를 확인할 수 있습니다.</item>
+        <item>몇몇 특수한 카드들을 제외하고 8자리 코드번호를 초과하는 카드들은 프리릴리즈 카드로, 프리릴리즈카드를 허용하는 서버 에서만 사용이 가능합니다.</item>
+        <item>bug제보를 하기 전에 게임 진행 상황을 살펴보십시오. bug가 아닐 수 있습니다.</item>
+        <item>최신버전은 유무는 실탄은땅콩님에게 문의하십시오.</item>
+        <item>좌측 하단의 도움말을 통해 사용법을 알 수 있습니다.</item>
+        <item>앱의 유지 보수를 위해 많은 시간과 노력이 필요합니다. 좌측하단의 마크를 통해 기부를 해주시면 감사하겠습니다.</item>
+        <item>리플레이 오류는 보통 서버와 클라이언트의 스크립트 차이로 발생하며 마땅한 해결법은 아직 없습니다. 가능한 클라우드 리플레이를 이용해주십시오. </item>
+        <item>강해지기 위해 단순히 티어덱을 배끼는 것 만이 아니라 덱을 사용하며 이해하는 과정이 필요합니다.</item>
+        <item>초보유저든, 복귀유저든 배울 마음만 있다면 크게 어렵지 않습니다.</item>
+        <item>덱 관리자에서 카드를 제거하실려면 제거할 카드를 길게 눌러주세요.</item>
+    </string-array>
+</resources>

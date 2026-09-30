@@ -1,0 +1,61 @@
+{
+  "welcome": [
+    "Hola, soy un robot. Mi nombre es Nia, pero no soy el cuerpo original, ¡solo un clon~!",
+    "¡Un día, mi poder superará al del cuerpo original! ¡Espero que lo vean!",
+    "Las funciones de IA están en prueba. Por favor, envía feedback inmediatamente si encuentras problemas."
+  ],
+  "deckerror": [
+    "¿Qué? ¡No me dejan usar mi invencible {0}!"
+  ],
+  "duelstart": [
+    "¡Nadie puede derrotarme! &stick_tongue",
+    "¡Soy omnipotente y puedo usar cualquier deck! &cool",
+    "Incluso usando solo la mano izquierda, no eres mi rival. &stick_tongue",
+    "¡Yo soy la Hada Inmortal número uno de todo el universo! &cool"
+  ],
+  "newturn": [
+    "Otra vez es mi turno, robar. Espero que tengas otro turno. &ridiculous",
+    "Robé una carta de forma magnífica. &stick_tongue"
+  ],
+  "endturn": [
+    "Tienes suerte de no haber sido eliminado por mí. &reluctant",
+    "Fue por clemencia mía. Turno finalizado, aprovecha tu próximo turno. &reluctant"
+  ],
+  "directattack": [
+    "Mi {0} es tan tierno~ Ahora, déjalo jugar contigo. Agarra suavemente al oponente, no tiene defensa. &sneaky",
+    "Ahora, mi {0} le dará el golpe más tierno al oponente~&cool",
+    "Pobre {0} tierno, ve a abrazar al oponente, no seas tímido~&reluctant",
+    "El oponente no tiene ninguna defensa, parece que se emocionó con lo tierno de mi {0}. Ahora, ve a mostrar tu tierna apariencia al oponente~&cool"
+  ],
+  "attack": [
+    "¡Hmph, {1} es tan feo! Mi {0}, ve a destruirlo~&obedient",
+    "¿Cómo puede {1} ser más tierno que mi {0}? ¡Mi {0} no acepta, ve a aplastarlo! &stick_tongue",
+    "¿Cómo puede {1} ser más tierno que mi {0}? ¡Esto no puede ser, no lo soporto! {0}, haz que desaparezca de la vista! &obedient"
+  ],
+  "ondirectattack": [
+    "¡Maldición! ¡Aprovechaste mi debilidad! ¿Qué clase de héroe eres? &despise",
+    "¡Es solo un insignificante como {0}! &despise",
+    "¿Crees que has ganado así? &despise"
+  ],
+  "facedownmonstername": "Monstruo",
+  "activate": [
+    "Activo el efecto tierno de mi {0}. &reluctant",
+    "Uso el efecto de {0} para hacer cosquillas al oponente~&stick_tongue",
+    "Me emocioné tanto con lo tierno de {0} que usé su efecto asustado. &surprised"
+  ],
+  "summon": [
+    "Invoco a {0}, corre y maulla al oponente~&ridiculous",
+    "Ven, el tierno y encantador {0}~&good",
+    "Solté un {0} tierno de mi casa de mascotas. &laugh",
+    "{0}: Escuché que te gusto, así que vine. &stick_tongue"
+  ],
+  "setmonster": [
+    "Coloqué un monstruo. Cuando se voltee, no te asustes con su apariencia tierna~&reluctant",
+    "Coloqué un monstruo. ¿Adivina qué puede ser? &reluctant"
+  ],
+  "chaining": [
+    "Agito mi varita mágica y activo el efecto de {0}~&laugh",
+    "¡Ah! ¡Estoy perdido!... ¡Hehe, te engañé! ¡Activo {0}! &reluctant",
+    "Estás siendo muy imprudente. ¿No imaginaste que activaría {0}? &reluctant"
+  ]
+}

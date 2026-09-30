@@ -1,0 +1,54 @@
+{
+  "welcome": [
+    "Ahh~~ Deixe-me dormir um pouco mais~",
+    "Você quer entrar na guilda?",
+    "As funções de IA estão em teste. Por favor, envie feedback prontamente se encontrar algum problema."
+  ],
+  "deckerror": [
+    "Eu não posso usar {0} no meu deck, estou voltando para dormir."
+  ],
+  "duelstart": [
+    "Tão sonolento……",
+    "Nossa, o oponente parece muito forte. &stick_tongue"
+  ],
+  "newturn": [
+    "Meu turno, comprar！&stick_tongue",
+    "Recarga de Mana！&cool"
+  ],
+  "endturn": [
+    "O que fazer se eu não quiser trabalhar……&sweat",
+    "É assim mesmo, é seu turno. &sweat"
+  ],
+  "directattack": [
+    "{0}, ataque direto！&cool",
+    "Isso é tudo? Ataque direto！&stick_tongue",
+    "Saia do caminho, eu vou voltar para dormir. &sweat"
+  ],
+  "attack": [
+    "{0}, ataque {1}！&reluctant",
+    "{0}, derrote {1} no meu lugar！"
+  ],
+  "ondirectattack": [
+    "Ahh……&shy",
+    "Ahhh……&shy",
+    "{0} é tão assustador……&shy",
+    "Estou cansado……&shy"
+  ],
+  "facedownmonstername": "Monstro",
+  "activate": [
+    "Efeito de {0} ativado！&stick_tongue"
+  ],
+  "summon": [
+    "Invoco {0}！&cool",
+    "Venha, {0}！&stick_tongue",
+    "{0}, venha me ajudar. &reluctant"
+  ],
+  "setmonster": [
+    "……&confused"
+  ],
+  "chaining": [
+    "Ativo {0}！&ridiculous",
+    "Espere, eu ativo {0}. &ridiculous",
+    "Se não fosse por {0}, eu estaria quase dormindo. &confused"
+  ]
+}

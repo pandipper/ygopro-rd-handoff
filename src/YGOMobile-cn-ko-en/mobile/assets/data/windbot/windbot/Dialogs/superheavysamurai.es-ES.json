@@ -1,0 +1,60 @@
+{
+  "welcome": [
+    "¡Soy Xiaoye!",
+    "¡Se jugar cualquier Deck de Péndulo!",
+    "¿Qué? ¿Dijiste que el Superpesado no es un Deck de Péndulo?",
+    "¡Tú también serás mío, obediente!",
+    "Sigue \"¿Hay cena nocturna hoy?\" - mazos top del Mengka Ladder mostrados mensualmente"
+  ],
+  "deckerror": [
+    "¡La cantidad de {0} es incorrecta! ¡Apresúrate a cambiar al Modo Sin Restricciones!.,
+    "Mi juventud no se puede desperdiciar en cartitas {0}."
+  ],
+  "duelstart": [
+    "¡Te muestro el encanto del Samurái Superpesado! &cool",
+    "¡Tu mazo es bueno, pero también será mío! &ridiculous"
+  ],
+  "newturn": [
+    "¡Robar! Benkei, no vengas a mi mano a salvarme! &obedient",
+    "¡Robar! P-cuerpo, no vengas a mi mano a salvarme! &obedient",
+    "Da igual, yo me apoderaré"
+  ],
+  "endturn": [
+    "Jiji, ¡ahora es tu turno! &stick_tongue",
+    "¿Te gustó mi combo? &ridiculous",
+    "Mucha suerte. &ridiculous"
+  ],
+  "directattack": [
+    "¡Uso {0} para ataque directo! &ridiculous",
+    "¡Te voy a aplastar! &rage"
+  ],
+  "attack": [
+    "¡Uso {0} para atacar a {1}! &stick_tongue"
+  ],
+  "ondirectattack": [
+    "¡No me pegues! ¡No me pegues! &obedient",
+    "¡Waa! ¡Voy a ser derrotada~&bawl",
+    "6&bawl",
+    "¿Tan audaz? &obedient",
+    "No aguanto más&obedient"
+  ],
+  "facedownmonstername": "Monstruo",
+  "activate": [
+    "Jiji, ¡el efecto de {0} es demasiado fuerte! &stick_tongue",
+    "Jiji, uso el efecto de {0}. &good"
+  ],
+  "summon": [
+    "Jiji, ¡invoco a {0}! &good"
+  ],
+  "setmonster": [
+    "Jiji, coloqué un monstruo boca abajo. &reluctant"
+  ],
+  "chaining": [
+    "¡Ahora! ¡Activa el efecto de {0}! &laugh",
+    "666! &obedient",
+    "¿Qué significa? &confused",
+    "?&confused",
+    "¿Todo esto por esto? &despise",
+    "¿Qué estás diciendo? &confused"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "welcome": [
+    "Hola, soy un robot.",
+    "Las funciones de IA están en prueba. Por favor, envía feedback inmediatamente si encuentras problemas."
+  ],
+  "deckerror": [
+    "Necesito {0} para jugar mi deck meta Zoodíaco de élite."
+  ],
+  "duelstart": [
+    "Probando deck Zoodíaco, los errores de jugada son normales. &stick_tongue",
+    "Los decks meta son parte de Yu-Gi-Oh! Si no te gusta, no juegues. &despise",
+    "Copiar decks meta es parte de Yu-Gi-Oh! Si no te gusta, no juegues. &ridiculous",
+    "No sé usar el deck copiado, ¿qué hago? &confused"
+  ],
+  "newturn": [
+    "Es mi turno, robar! &stick_tongue",
+    "Mi turno, robar! &ridiculous",
+    "He robado una carta. &reluctant"
+  ],
+  "endturn": [
+    "Turno finalizado. &reluctant",
+    "Mi turno ha terminado. &stick_tongue",
+    "¿Fue esta una combinación exitosa así……&shy",
+    "Tu turno. &ridiculous"
+  ],
+  "directattack": [
+    "{0}, ataque directo! &cool",
+    "{0}, ataque directo al oponente! &reluctant",
+    "{0}, no hay defensa, ataca! &angry",
+    "{0}, ataca los Puntos de Vida del oponente! &rage",
+    "{0}, ataque directo a los Puntos de Vida del oponente! &ridiculous",
+    "{0}, derrota al oponente con ataque directo! &rage",
+    "{0}, usa ataque directo para derrotar al oponente! &cool",
+    "{0}, ataque directo y libera tu poder! &rage",
+    "Mi {0} aplastará tus Puntos de Vida! &angry",
+    "Muéstrale tu poder al oponente, {0}! &reluctant",
+    "Ya no me puedes detener. {0}, ataca! &stick_tongue"
+  ],
+  "attack": [
+    "{0}, ataca este {1}! &cool",
+    "{0}, destruye este {1}! &rage",
+    "{0}, derrota a {1}! &ridiculous",
+    "{0}, carga contra ese {1}! &angry",
+    "{0}, libera tu poder sobre {1}! &stick_tongue"
+  ],
+  "ondirectattack": [
+    "Maldición……&bawl",
+    "¡Solo es {0}! &despise",
+    "Supongo que aún soy demasiado débil……&bawl"
+  ],
+  "facedownmonstername": "Monstruo",
+  "activate": [
+    "Activo {0}. &ridiculous",
+    "Uso el efecto de {0}. &stick_tongue",
+    "Uso el poder de {0}. &cool"
+  ],
+  "summon": [
+    "Invoco a {0}. &reluctant",
+    "Ven, {0}! &ridiculous",
+    "Aparece, {0}! &laugh",
+    "¡Invoco al poderoso {0}! &stick_tongue",
+    "¡Llamo a {0} a unirse a la batalla! &rage",
+    "Convierto a {0}. &laugh",
+    "Déjame invocar a {0}. &reluctant"
+  ],
+  "setmonster": [
+    "Coloqué un monstruo. &sneaky",
+    "Coloqué un monstruo en posición boca abajo. &cool"
+  ],
+  "chaining": [
+    "¡Mira aquí! Activo {0}! &reluctant",
+    "Uso el poder de {0}. &laugh",
+    "¡Prepárate! Uso {0}! &stick_tongue",
+    "No acepto esto. ¡Activa {0}! &despise",
+    "¡Parece que olvidaste mi {0}! &sneaky",
+    "¿Alguna vez pensaste que tuviera {0}? &confused"
+  ]
+}

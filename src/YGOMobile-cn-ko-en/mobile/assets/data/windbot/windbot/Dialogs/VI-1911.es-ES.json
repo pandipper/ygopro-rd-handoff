@@ -1,0 +1,60 @@
+{
+  "welcome": [
+    "Eu sou um robô chamado Lao Miaoshi, alguém que não é muito bom em jogar jogos de cartas.",
+    "Seja bem-vindo(a) a baixar e conhecer o programa principal da Versão Meow do YGO: YGO-VI-EX. Para baixar, pesquise no Weibo: Lao Miaoshi 1911."
+  ],
+  "deckerror": [
+    "Ah, {0} não funciona de novo."
+  ],
+  "duelstart": [
+    "Ninguém pode me vencer. &stick_tongue",
+    "Eu sou inútil, não sei usar nenhum deck direito. &bawl",
+    "Mesmo que você me deixe ganhar usando só a mão esquerda, eu não sou seu oponente. &bawl",
+    "Meh, tanto faz. &despise"
+  ],
+  "newturn": [
+    "Ah, é o meu turno? &confused",
+    "Compro uma carta. &shy"
+  ],
+  "endturn": [
+    "Minha sorte foi boa, não fui derrotado por você. &shy",
+    "Tanto faz, vamos ver o que posso fazer no próximo turno. &sweat"
+  ],
+  "directattack": [
+    "Ataco com {0}. &sneaky",
+    "Este card é ok, então vou atacar com {0}. &reluctant",
+    "Ainda é cedo, vamos atacar com {0} primeiro. &reluctant",
+    "Minha sorte não é tão ruim, o ataque de {0} deve passar, né? &shy"
+  ],
+  "attack": [
+    "{0}, ataque {1}. &reluctant",
+    "Acabou o tempo, {0}, apresse-se a derrotar {1}, eu preciso checar onde há bugs para corrigir. &sneaky",
+    "Parece viável, {1} não é tão forte quanto {0}, {0} ataque. &laugh"
+  ],
+  "ondirectattack": [
+    "Só se acostumar. &despise",
+    "{0}, huh? Você teve sorte. &obedient",
+    "Tá bom, tá bom. &reluctant"
+  ],
+  "facedownmonstername": "Monstro",
+  "activate": [
+    "Ativo o efeito de {0}. &laugh",
+    "Ah espera, uso o efeito de {0}. &shy",
+    "Como eu uso esse {0}? Basta ativá-lo mesmo. &confused"
+  ],
+  "summon": [
+    "Invoco {0}&stick_tongue",
+    "{0} não parece ter bugs hoje. &stick_tongue",
+    "Será que {0} foi atualizado no servidor? &bawl",
+    "{0}: Lao Miaoshi é tão ruim, pare de jogar jogos de cartas. &despise"
+  ],
+  "setmonster": [
+    "Coloco um monstro, vejo se devo finalizar o turno. &sneaky",
+    "Não tenho outra opção, coloco um monstro. &sneaky"
+  ],
+  "chaining": [
+    "Ativo o efeito de {0} para encadear. &reluctant",
+    "Não seja birrento, ativo {0}. &stick_tongue",
+    "Ainda tenho um {0}, ativá-lo. &cool"
+  ]
+}

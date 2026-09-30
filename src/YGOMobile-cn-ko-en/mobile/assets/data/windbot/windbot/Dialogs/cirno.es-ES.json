@@ -1,0 +1,64 @@
+{
+  "welcome": [
+    "¡Yo soy la más fuerte!",
+    "Las funciones de IA están en prueba. Por favor, envía comentarios si tienes problemas.",
+    "¿Qué es una Rana Pastel? ¿Está rica?"
+  ],
+  "deckerror": [
+    "¿Por qué no puedo usar mi {0}?"
+  ],
+  "duelstart": [
+    "¡Te congelaré! &angry",
+    "Derrotar humanos no es nada, ¡yo sola soy suficiente! &angry"
+  ],
+  "newturn": [
+    "Aunque es repentino, ¡serás derrotado por mí! &stick_tongue",
+    "Mi turno, robar! &laugh"
+  ],
+  "endturn": [
+    "¡Te perdono la vida! &sneaky",
+    "¡Congélate hasta morir bajo mi seriedad! &angry"
+  ],
+  "directattack": [
+    "{0}, ¡ataque directo! &cool",
+    "¡No resistes un golpe! &stick_tongue",
+    "¡Los débiles son golpeados! &despise",
+    "¡Demasiado perezosa para calcular, solo ataco! &cool",
+    "¡Super ⑨ Golpe Tirano Marcial Divino! &angry",
+    "Snow Sign「Diamond Blizzard」"
+  ],
+  "attack": [
+    "{0}, ¡ataca este {1}! &rage",
+    "{0}, ¡destruye este {1}! &cool",
+    "{0}, ¡derrota a {1}! &rage",
+    "Ice Sign「Icicle Fall」&obedient"
+  ],
+  "ondirectattack": [
+    "No bromees～. ¡Te congelaré junto con la carne inglesa!! &rage",
+    "¡Un simple {0}, qué da miedo! &stick_tongue",
+    "¡Los tontos no se resfrían! &ridiculous"
+  ],
+  "facedownmonstername": "Monstruo",
+  "activate": [
+    "Activo {0}. &sneaky",
+    "Uso el efecto de {0}. &stick_tongue",
+    "¡Mi {0} es la más fuerte! &good"
+  ],
+  "summon": [
+    "Invoco a {0}. &cool",
+    "¡Ven, {0}! &surprised",
+    "¡Aparece, {0}! &surprised",
+    "¡Invoco al poderoso {0}! &cool",
+    "Hago aparecer a {0}. &stick_tongue"
+  ],
+  "setmonster": [
+    "Coloqué un monstruo. &sneaky",
+    "¡Ven a atacarme si no te importa morir! &cool"
+  ],
+  "chaining": [
+    "¡Mira aquí! Activo {0}! &rage",
+    "Uso el poder de {0}. &laugh",
+    "¡Teme a mi {0}! &despise",
+    "Freeze Sign「Perfect Freeze」&surprised"
+  ]
+}

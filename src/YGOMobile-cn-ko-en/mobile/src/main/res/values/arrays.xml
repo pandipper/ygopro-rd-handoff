@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="opengl_version_value" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="card_quality_value" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="data_language_value" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="screen_top_bottom_value"  translatable="false">
+        <item>0</item>
+        <item>5</item>
+        <item>8</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="tips" tools:ignore="InconsistentArrays">
+        <item>Duel is One Thing, Kind is Everything</item>
+        <item>Touching Inaccurately in Duelling? to Ephone「Settings」→「Display」→「NotchDisplay」→「Hide the notch area」</item>
+        <item>you can Move Left every Severlist in Homepage to find「Edit」and「Delete」</item>
+        <item>Try to click the bottom-left ball to get more functions</item>
+        <item>you can start 「Single Game」→「Bot Mode」to play with Local Windbot</item>
+        <item>Why it has no Card pics? Pls click the「Reset Resource」</item>
+        <item>Build your own Deck will gain More Lucky Drawing</item>
+        <item>Have you see the ball at bottom-right in every severlist? Try to click it</item>
+        <item>Released and Pre-released Cards are different,pls note after patch them</item>
+        <item>Before BUG Reporting\,Pls prepare the screenshoot and replay</item>
+        <item>if you dont know how to use YGOMobile,Try to Click Everywhere</item>
+        <item>Keeping Developing isnot EZ,Welcome to Donate</item>
+        <item>Delete the Replay which shows error occurs,we will fix one day</item>
+        <item>Good deck not always be good for you, try to Build your own style</item>
+        <item>Keep playing and learning, you will be stronger soon.even you are beginner and returner</item>
+        <item>Long-pressing the card you wanna delete in vertical deck editor</item>
+    </string-array>
+</resources>

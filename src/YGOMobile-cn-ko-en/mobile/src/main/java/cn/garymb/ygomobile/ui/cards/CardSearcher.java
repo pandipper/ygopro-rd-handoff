@@ -1,0 +1,2768 @@
+package cn.garymb.ygomobile.ui.cards;
+
+import static cn.garymb.ygomobile.Constants.ASSETS_PATH;
+import static cn.garymb.ygomobile.Constants.ASSET_ATTR_RACE;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import cn.garymb.ygomobile.AppsSettings;
+import cn.garymb.ygomobile.lite.R;
+import cn.garymb.ygomobile.loader.CardSearchInfo;
+import cn.garymb.ygomobile.loader.ICardSearcher;
+import cn.garymb.ygomobile.ui.adapters.KeywordHistoryAdapter;
+import cn.garymb.ygomobile.ui.adapters.SimpleSpinnerAdapter;
+import cn.garymb.ygomobile.ui.adapters.SimpleSpinnerItem;
+import cn.garymb.ygomobile.ui.plus.VUiKit;
+import cn.garymb.ygomobile.ui.widget.SearchableListDialog;
+import cn.garymb.ygomobile.utils.BitmapUtil;
+import cn.garymb.ygomobile.utils.SharedPreferenceUtil;
+import cn.garymb.ygomobile.utils.YGOUtil;
+import ocgcore.DataManager;
+import ocgcore.LimitManager;
+import ocgcore.StringManager;
+import ocgcore.data.Card;
+import ocgcore.data.CardSet;
+import ocgcore.data.LimitList;
+import ocgcore.enums.CardAttribute;
+import ocgcore.enums.CardCategory;
+import ocgcore.enums.CardOt;
+import ocgcore.enums.CardRace;
+import ocgcore.enums.CardType;
+import ocgcore.enums.LimitType;
+
+public class CardSearcher implements View.OnClickListener {
+    private static final String TAG = "CardSearcher";
+    final String[] BtnVals = new String[9];
+    private final AutoCompleteTextView keyWord;
+    private final CheckBox chk_multi_keyword;
+
+    private final Switch genesys_Switch;
+    private final Spinner limitSpinner;
+    private final Spinner genesys_limitSpinner;
+    private final Spinner limitListSpinner;
+    private final Spinner genesys_limitListSpinner;
+    private GridLayout gl_ot;
+    private ImageView iv_hide_ot;
+    private Button[] otButtons;
+    private CardOt[] otIds;
+    List<Integer> otList;
+    // 字段标签栏
+    private final ImageView iv_hide_setCode;
+    private final FlexboxLayout tag_setcode;
+    List<Long> setCodeList;
+    boolean setcode_isAnd;
+    // 效果类型按钮
+    private GridLayout gl_category;
+    private ImageView iv_hide_category;
+    private Button[] categoryButtons;
+    private CardCategory[] categories;
+    List<Long> categoryList;
+    // 卡片类型按钮
+    private GridLayout gl_cardType;
+    private ImageView iv_hide_cardType;
+    private Button[] cardTypeButtons;
+    private long[] typeIds;
+    private List<Long> cardTypeList;
+    // 魔陷图标
+    private LinearLayout ll_icon;
+    private GridLayout gl_icon;
+    private ImageView iv_hide_spelltrap;
+    private Button[] iconButtons;
+    private Button[] spellButtons;
+    private Button[] trapButtons;
+    private List<Long> spellTrapTypeList;
+    private long[] iconIds;
+    private long[] spellIds;
+    private long[] trapIds;
+    // 属性筛选按钮
+    private Button[] attributeButtons;
+    private GridLayout gl_attr;
+    private ImageView iv_hide_attr;
+    private CardAttribute[] attributeIds;
+    private List<Long> attributeList;
+    // 种族筛选按钮
+    private Button[] raceButtons;
+    private GridLayout gl_race;
+    private ImageView iv_hide_race;
+    private CardRace[] raceIds;
+    private List<Long> raceList;
+    //怪兽类型按钮
+    private GridLayout gl_monsterType;
+    private ImageView iv_hide_monsterType;
+    private Button[] monsterTypeButtons;
+    private long[] monsterTypeIds;
+    private Drawable[] TypeIcon;
+    private List<Long> monsterTypeList;
+    private boolean isAnd;
+    // 排除怪兽类型按钮
+    private final GridLayout gl_exclude_type;
+    private ImageView iv_hide_exclude_type;
+    private Button[] exclude_typeButtons;
+    private List<Long> excludeTypeList;
+    // 等级\阶级\连接数
+    private GridLayout gl_level_rank_link;
+    private ImageView iv_hide_level_rank_link;
+    private ImageButton[] levelButtons;
+    private List<Integer> levelList;
+    // 灵摆刻度数
+    private GridLayout gl_pendulum_scale;
+    private ImageView iv_hide_pendulum_scale;
+    private ImageButton[] pendulumScaleButtons;
+    private List<Integer> pendulumScaleList;
+    // 连接箭头
+    private LinearLayout ll_linkControl;
+    private ImageView iv_hide_linkmarker;
+    private Button[] linkButton;
+    private int[] disImgs;
+    private int[] enImgs;
+    private int lineKey;
+
+    private final EditText atkText;
+    private final EditText defText;
+    private TextInputLayout til_atk;
+    private LinearLayout ll_equal_def;
+    private CheckBox chk_atkDef_sum;
+    private CheckBox chk_atkDef_or;
+    private Boolean isOr;
+    private Boolean isSum;
+    private Button btn_equal;
+    private Boolean isEqual;
+    private boolean isUpdating = false; // 防止两个文本框相互触发更新造成无限循环
+
+    private final ImageButton searchButton;
+    private final ImageButton resetButton;
+    private final ImageButton btnLastSearch;
+    private final ImageButton btnNextSearch;
+    private final List<CardSearchInfo> searchHistory = new ArrayList<>();
+    private int searchIndex = -1;
+    private final View view;
+    private final View layout_monster;
+    private final ICardSearcher mICardSearcher;// ICardSearcher 即为CardLoader的接口;
+    private final Context mContext;
+    private final Button myFavButton;
+    protected StringManager mStringManager;
+    protected LimitManager mLimitManager;
+    protected AppsSettings mSettings;
+
+    private CallBack mCallBack;
+    private boolean mShowFavorite;
+    // 关键词历史记录下拉适配器（支持每条记录右侧删除图标）
+    private KeywordHistoryAdapter keywordHistoryAdapter;
+
+    public CardSearcher(View view, ICardSearcher iCardSearcher) {
+        this.view = view;
+        this.mContext = view.getContext();
+        this.mICardSearcher = iCardSearcher;
+        this.mSettings = AppsSettings.get();
+        mStringManager = DataManager.get().getStringManager();
+        mLimitManager = DataManager.get().getLimitManager();
+        keyWord = findViewById(R.id.edt_word1);
+        chk_multi_keyword = findViewById(R.id.chk_multi_keyword);
+        genesys_Switch = findViewById(R.id.sw_genesys_mode);//genesys模式开关
+        limitSpinner = findViewById(R.id.sp_limit);
+        genesys_limitSpinner = findViewById(R.id.sp_genesys_limit);//初始化genesys禁限选项布局
+        limitListSpinner = findViewById(R.id.sp_limit_list);
+        genesys_limitListSpinner = findViewById(R.id.sp_genesys_limit_list);//初始化genesys禁卡表布局
+        // 专属（OCG TCG OCG|TCG SC_OCG CUSTOM）
+        gl_ot = findViewById(R.id.gl_ot);
+        iv_hide_ot = findViewById(R.id.iv_hide_ot);
+        otIds = CardOt.values();
+        otList = new ArrayList<>();
+        // 字段
+        iv_hide_setCode = findViewById(R.id.iv_hide_setCode);
+        tag_setcode = findViewById(R.id.tag_setcode);
+        setcode_isAnd = false;
+        setCodeList = new ArrayList<>();
+        // 效果类型宫格布局
+        gl_category = findViewById(R.id.gl_category);
+        iv_hide_category = findViewById(R.id.iv_hide_category);
+        categories = CardCategory.values();
+        categoryList = new ArrayList<>();
+        // 卡片类型宫格布局
+        gl_cardType = findViewById(R.id.gl_cardType);
+        iv_hide_cardType = findViewById(R.id.iv_hide_cardType);
+        cardTypeList = new ArrayList<>();
+        // 魔陷类型宫格布局
+        ll_icon = findViewById(R.id.ll_icon);//需要隐藏时控制整个布局
+        gl_icon = findViewById(R.id.gl_icon);
+        iv_hide_spelltrap = findViewById(R.id.iv_hide_spelltrap);
+        spellTrapTypeList = new ArrayList<>();
+
+        // 怪兽类型总布局-----------------------
+        layout_monster = findViewById(R.id.layout_monster);
+        // 属性宫格布局
+        gl_attr = findViewById(R.id.gl_attr);
+        iv_hide_attr = findViewById(R.id.iv_hide_attr);
+        attributeIds = CardAttribute.values();
+        attributeList = new ArrayList<>();
+        // 种族宫格布局
+        gl_race = findViewById(R.id.gl_race);
+        iv_hide_race = findViewById(R.id.iv_hide_race);
+        raceIds = CardRace.values();
+        raceList = new ArrayList<>();
+        // 怪兽种类宫格布局
+        gl_monsterType = findViewById(R.id.gl_monsterType);
+        iv_hide_monsterType = findViewById(R.id.iv_hide_monsterType);
+        monsterTypeList = new ArrayList<>();
+        isAnd = false;
+        // 排除种类宫格布局
+        gl_exclude_type = findViewById(R.id.gl_excludeType);
+        iv_hide_exclude_type = findViewById(R.id.iv_hide_excludeType);
+        excludeTypeList = new ArrayList<>();
+        // 等级、阶级、连接数宫格布局
+        gl_level_rank_link = findViewById(R.id.gl_level);
+        iv_hide_level_rank_link = findViewById(R.id.iv_hide_level);
+        levelList = new ArrayList<>();
+        // 等级、阶级、连接数宫格布局
+        gl_pendulum_scale = findViewById(R.id.gl_pScale);
+        iv_hide_pendulum_scale = findViewById(R.id.iv_hide_pScale);
+        pendulumScaleList = new ArrayList<>();
+        // 连接箭头布局
+        ll_linkControl = findViewById(R.id.ll_linkcontrol);
+        iv_hide_linkmarker = findViewById(R.id.iv_hide_linkmarker);
+        // 攻击力、守备力
+        atkText = findViewById(R.id.edt_atk);
+        defText = findViewById(R.id.edt_def);
+
+        isEqual = false;// 攻击力和守备力相等满足的逻辑开关
+        btn_equal = findViewById(R.id.btn_equal);
+        btn_equal.setOnClickListener(this);
+
+        til_atk = findViewById(R.id.til_atk);
+        ll_equal_def = findViewById(R.id.ll_equal_def);
+        chk_atkDef_sum = findViewById(R.id.chk_atkDef_sum);
+        isSum = false;// 攻击力与守备力之和满足的逻辑开关
+
+        chk_atkDef_or = findViewById(R.id.chk_atkDef_or);
+        isOr = false;// 攻击力或守备力其中之一满足的逻辑开关
+
+        myFavButton = findViewById(R.id.btn_my_fav);
+        searchButton = findViewById(R.id.btn_search);
+        resetButton = findViewById(R.id.btn_reset);
+        myFavButton.setOnClickListener(this);
+        searchButton.setOnClickListener(this);
+        resetButton.setOnClickListener(this);
+
+        btnLastSearch = findViewById(R.id.btn_last_search);
+        btnNextSearch = findViewById(R.id.btn_next_search);
+        btnLastSearch.setOnClickListener(this);
+        btnNextSearch.setOnClickListener(this);
+        updateSearchNavButtons();
+
+        //输入即时搜索
+        OnEditorActionListener searchListener = (v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                search();
+                return true;
+            }
+            return false;
+        };
+        chk_atkDef_sum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String hintText = isChecked ? YGOUtil.s(R.string.sum_atkDef) : (chk_atkDef_or.isChecked() ? YGOUtil.s(R.string.or_atkDef) : "ATK");
+                til_atk.setHint(hintText);
+                atkText.setHint(hintText);
+                // 只有当chk_atkDef_sum和chk_atkDef_or都没被勾选时才显示ll_equal_def
+                ll_equal_def.setVisibility(!isChecked && !chk_atkDef_or.isChecked() ? View.VISIBLE : View.GONE);
+                isSum = isChecked;
+                if (isChecked) {
+                    til_atk.setHint(YGOUtil.s(R.string.sum_atkDef));
+                    atkText.setHint(YGOUtil.s(R.string.sum_atkDef));
+                    defText.setText("");
+                    resetEqualButton();//重置相等模式按钮
+                    isOr = false;
+                    chk_atkDef_or.setChecked(false);
+                }
+            }
+        });
+        chk_atkDef_or.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String hintText = isChecked ? YGOUtil.s(R.string.or_atkDef) : (chk_atkDef_sum.isChecked() ? YGOUtil.s(R.string.sum_atkDef) : "ATK");
+                til_atk.setHint(hintText);
+                atkText.setHint(hintText);
+                // 只有当chk_atkDef_sum和chk_atkDef_or都没被勾选时才显示ll_equal_def
+                ll_equal_def.setVisibility(!isChecked && !chk_atkDef_sum.isChecked() ? View.VISIBLE : View.GONE);
+                isOr = isChecked;
+                if (isChecked) {
+                    defText.setText("");
+                    resetEqualButton();//重置相等模式按钮
+                    isSum = false;
+                    chk_atkDef_sum.setChecked(false);
+
+                }
+            }
+        });
+
+        keyWord.setOnEditorActionListener(searchListener);
+        // 关键字输入框：同时支持输入与下拉显示搜索历史记录
+        keyWord.setThreshold(1);
+        // 点击历史记录项：自动填入关键词并搜索
+        //keyWord.setOnItemClickListener((parent, v, position, id) -> search());
+        // 点击输入框：直接弹出历史记录下拉列表（已聚焦时再次点按也生效）
+        keyWord.setOnClickListener(v -> showKeywordDropdown());
+        // 获得焦点：弹出历史记录下拉列表
+        keyWord.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                showKeywordDropdown();
+            }
+        });
+        // 清空输入内容时恢复显示全部历史记录
+        keyWord.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(android.text.Editable s) {
+                if (s.length() == 0 && keyWord.isPopupShowing()) {
+                    refreshKeywordHistory();
+                }
+            }
+        });
+        // 初始加载搜索历史记录
+        refreshKeywordHistory();
+
+        chk_multi_keyword.setChecked(mSettings.getKeyWordsSplit() != 0);
+        chk_multi_keyword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSettings.setKeyWordsSplit(isChecked ? 1 : 0);
+            }
+        });
+
+        genesys_Switch.setChecked(mSettings.getGenesysMode() != 0);
+        genesys_Switch.setText(mSettings.getGenesysMode() != 0 ? R.string.switch_genesys_mode : R.string.switch_banlist_mode);
+        genesys_Switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+            //同时通知整个界面都显示该禁卡表的禁限情况
+            LimitList limit = isChecked ? mLimitManager.getGenesysLimit(getSelectText(genesys_limitListSpinner)) : mLimitManager.getLimit(getSelectText(limitListSpinner));
+            if (limit != null) {
+                //同时通知整个界面都显示该禁卡表的禁限情况
+                mCallBack.setLimit(limit, "genesy切换开关");
+                mICardSearcher.setLimitList(limit);
+            } else {
+                mCallBack.setLimit(new LimitList(), "genesy切换开关 - null禁卡表");
+                mICardSearcher.setLimitList(new LimitList());
+            }
+
+            // 重置禁限筛选条件，以免切换时出现不合预期的结果
+            reset(isChecked ? genesys_limitSpinner : limitSpinner);
+            genesys_Switch.setText(isChecked ? R.string.switch_genesys_mode : R.string.switch_banlist_mode);
+
+            //根据开关切换两种模式禁卡表的显示和隐藏
+            genesys_limitListSpinner.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            genesys_limitSpinner.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            limitListSpinner.setVisibility(isChecked ? View.GONE : View.VISIBLE);
+            limitSpinner.setVisibility(isChecked ? View.GONE : View.VISIBLE);
+
+        });
+        limitListSpinner.setVisibility(genesys_Switch.isChecked() ? View.GONE : View.VISIBLE);
+        limitListSpinner.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                refreshLimitListSpinnerItems(limitListSpinner);
+            }
+            return false; // 返回false以允许正常的spinner行为继续
+        });
+        limitSpinner.setVisibility(genesys_Switch.isChecked() ? View.GONE : View.VISIBLE);
+        genesys_limitSpinner.setVisibility(genesys_Switch.isChecked() ? View.VISIBLE : View.GONE);
+        genesys_limitListSpinner.setVisibility(genesys_Switch.isChecked() ? View.VISIBLE : View.GONE);
+        genesys_limitListSpinner.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                refreshGenesysLimitListSpinnerItems(genesys_limitListSpinner);
+            }
+            return false; // 返回false以允许正常的spinner行为继续
+        });
+    }
+
+    public void setCallBack(CallBack callBack) {
+        mCallBack = callBack;
+    }
+
+    public void showFavorites(boolean showList) {
+        mShowFavorite = true;
+        myFavButton.setSelected(true);
+        myFavButton.setBackground(mContext.getDrawable(R.drawable.radius));
+        if (mCallBack != null) {
+            mCallBack.onSearchStart();
+        }
+        if (mCallBack != null) {
+            VUiKit.post(() -> {
+                mCallBack.onSearchResult(CardFavorites.get().getCards(mICardSearcher), !showList);
+            });
+        }
+    }
+
+    public void hideFavorites(boolean reload) {
+        mShowFavorite = false;
+        myFavButton.setSelected(false);
+        myFavButton.setBackground(mContext.getDrawable(R.drawable.selected_dark));
+        if (mCallBack != null) {
+            mCallBack.onSearchStart();
+        }
+        if (reload) {
+            VUiKit.post(this::search);
+        } else {
+            if (mCallBack != null) {
+                VUiKit.post(() -> {
+                    mCallBack.onSearchResult(Collections.emptyList(), true);
+                });
+            }
+        }
+    }
+
+    /**
+     * 仅复位收藏按钮的状态与外观（回到默认状态），不触发任何回调与搜索
+     */
+    private void resetFavoriteState() {
+        mShowFavorite = false;
+        myFavButton.setSelected(false);
+        myFavButton.setBackground(mContext.getDrawable(R.drawable.selected_dark));
+    }
+
+    public void initItems() {
+        initCategoryButtons();
+        initTypeButtons();
+        initAttributeButtons();
+        initRaceButtons();
+        initIconButtons();
+        initMonsterTypeButtons();
+        initExcludeTypeButtons();
+        initLevelButtons();
+        initPendulumScaleButtons();
+        initLinkMarkerButtons();
+        initOtButtons();
+        initLimitSpinners(limitSpinner);//初始化常规禁限选项：禁止、限制、准限制
+        initLimitGenesysSpinners(genesys_limitSpinner);//初始化Genesys禁限选项：Genesys、禁止
+        initLimitListSpinners(limitListSpinner);
+        initGenesysLimitListSpinners(genesys_limitListSpinner);
+        initSetnameSearchFeature();
+        initAttackDefenseSync();
+    }
+
+    protected <T extends View> T findViewById(int id) {
+        T v = view.findViewById(id);
+        if (v instanceof Spinner) {
+            ((Spinner) v).setPopupBackgroundResource(R.color.colorNavy);
+        }
+        return v;
+    }
+
+    public boolean isShowFavorite() {
+        return mShowFavorite;
+    }
+
+    protected String getString(int id) {
+        return mContext.getString(id);
+    }
+
+    private void initLimitSpinners(Spinner spinner) {
+        List<SimpleSpinnerItem> items = new ArrayList<>();
+
+        // 添加默认选项
+        items.add(new SimpleSpinnerItem(LimitType.None.getId(), getString(R.string.label_limit)));
+        items.add(new SimpleSpinnerItem(LimitType.All.getId(), getString(R.string.all)));
+
+        // 常规禁卡表下添加Forbidden（禁止）、Limit（限制）和SemiLimit（准限制）选项
+        items.add(new SimpleSpinnerItem(LimitType.Forbidden.getId(), mStringManager.getLimitString(LimitType.Forbidden.getId())));
+        items.add(new SimpleSpinnerItem(LimitType.Limit.getId(), mStringManager.getLimitString(LimitType.Limit.getId())));
+        items.add(new SimpleSpinnerItem(LimitType.SemiLimit.getId(), mStringManager.getLimitString(LimitType.SemiLimit.getId())));
+
+        SimpleSpinnerAdapter adapter = new SimpleSpinnerAdapter(mContext);
+        adapter.setColor(Color.WHITE);
+        adapter.setTextSize(14);
+        adapter.set(items);
+        spinner.setAdapter(adapter);
+    }
+
+    private void initLimitGenesysSpinners(Spinner spinner) {
+        List<SimpleSpinnerItem> items = new ArrayList<>();
+
+        // 添加默认选项
+        items.add(new SimpleSpinnerItem(LimitType.None.getId(), getString(R.string.label_limit)));
+        items.add(new SimpleSpinnerItem(LimitType.All.getId(), getString(R.string.all)));
+
+        // GeneSys模式下只添加GeneSys和Forbidden选项
+        items.add(new SimpleSpinnerItem(LimitType.GeneSys.getId(), mStringManager.getLimitString(LimitType.GeneSys.getId())));
+        items.add(new SimpleSpinnerItem(LimitType.Forbidden.getId(), mStringManager.getLimitString(LimitType.Forbidden.getId())));
+
+        SimpleSpinnerAdapter adapter = new SimpleSpinnerAdapter(mContext);
+        adapter.setColor(Color.WHITE);
+        adapter.setTextSize(14);
+        adapter.set(items);
+        spinner.setAdapter(adapter);
+    }
+
+    private void initLimitListSpinners(Spinner spinner) {
+        spinner.setOnItemSelectedListener(null);
+        // 创建一个列表用于存储下拉选项
+        List<SimpleSpinnerItem> items = new ArrayList<>();
+        // 获取所有禁卡表名称列表
+        List<String> limits = mLimitManager.getLimitNames();
+        // 初始化选中项索引为-1（表示未选中）
+        int index = -1;
+        // 获取禁卡表总数
+        int count = mLimitManager.getCount();
+        // 当前选中的禁卡表，初始化为null
+        LimitList cur = null;
+        // 如果卡片搜索器不为null，则获取当前使用的禁卡表
+        if (mICardSearcher != null) {
+            cur = mICardSearcher.getLimitList();
+        }
+        // 添加默认选项"选择禁卡表"
+        items.add(new SimpleSpinnerItem(0, getString(R.string.label_limitlist)));
+        // 遍历所有禁卡表
+        for (int i = 0; i < count; i++) {
+            // 计算选项索引（从1开始）
+            int j = i + 1;
+            // 获取禁卡表名称
+            String name = limits.get(i);
+            // 创建并添加禁卡表选项到列表
+            items.add(new SimpleSpinnerItem(j, name));
+            // 如果当前禁卡表不为null且名称匹配，则记录选中索引
+            if (cur != null && TextUtils.equals(cur.getName(), name)) {
+                index = j;
+            }
+        }
+        // 创建适配器用于绑定数据到Spinner
+        SimpleSpinnerAdapter adapter = new SimpleSpinnerAdapter(mContext);
+        // 设置文字颜色为白色
+        adapter.setColor(Color.WHITE);
+        adapter.setTextSize(12);
+        // 设置适配器的数据源
+        adapter.set(items);
+        // 将适配器设置给Spinner
+        spinner.setAdapter(adapter);
+        // 如果找到了匹配的禁卡表，则设置Spinner的选中项
+        Log.w(TAG, "index:" + index);
+        if (index >= 0) {
+            spinner.setSelection(index);
+        }
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                long value = getSelect(spinner);
+                if (value <= 0) {
+                    reset(spinner);
+                }
+                LimitList limit = mLimitManager.getLimit(getSelectText(spinner));
+                // 添加空值检查
+                if (limit != null) {
+                    //同时通知整个界面都显示该禁卡表的禁限情况
+                    mCallBack.setLimit(limit, "初始化 常规 禁卡表");
+                    mICardSearcher.setLimitList(limit);
+                } else {
+                    // 可以选择设置一个默认的LimitList或空的LimitList
+                    mCallBack.setLimit(new LimitList(), "初始化 常规 禁卡表 - 标题");
+                    mICardSearcher.setLimitList(new LimitList());
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void initGenesysLimitListSpinners(Spinner spinner) {
+        spinner.setOnItemSelectedListener(null);
+        // 创建一个列表用于存储下拉选项
+        List<SimpleSpinnerItem> items = new ArrayList<>();
+        // 获取所有禁卡表名称列表
+        List<String> genesys_limit_names = mLimitManager.getGenesysLimitNames();
+        // 初始化选中项索引为-1（表示未选中）
+        int index = -1;
+        // 获取禁卡表总数
+        int genesys_count = mLimitManager.getGenesysCount();
+        // 当前选中的禁卡表，初始化为null
+        LimitList cur = null;
+        // 如果卡片搜索器不为null，则获取当前使用的禁卡表
+        if (mICardSearcher != null) {
+            cur = mICardSearcher.getGenesysLimitList();
+        }
+        // 添加默认选项"禁卡表"
+        items.add(new SimpleSpinnerItem(0, getString(R.string.label_limitlist)));
+        // 遍历所有禁卡表
+        for (int i = 0; i < genesys_count; i++) {
+            // 计算选项索引（从1开始）
+            int j = i + 1;
+            // 获取禁卡表名称
+            String name = genesys_limit_names.get(i);
+            // 创建并添加禁卡表选项到列表
+            items.add(new SimpleSpinnerItem(j, name));
+            // 如果当前禁卡表不为null且名称匹配，则记录选中索引
+            if (cur != null && TextUtils.equals(cur.getName(), name)) {
+                index = j;
+            }
+        }
+        // 创建适配器用于绑定数据到Spinner
+        SimpleSpinnerAdapter adapter = new SimpleSpinnerAdapter(mContext);
+        // 设置文字颜色为白色
+        adapter.setColor(Color.WHITE);
+        adapter.setTextSize(11);
+        // 设置适配器的数据源
+        adapter.set(items);
+        // 将适配器设置给Spinner
+        spinner.setAdapter(adapter);
+        // 如果找到了匹配的禁卡表，则设置Spinner的选中项
+        Log.w(TAG, " genesys index:" + index);
+        if (index >= 0) {
+            spinner.setSelection(index);
+        }
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                long value = getSelect(spinner);
+                if (value <= 0) {
+                    reset(spinner);
+                }
+
+                LimitList genesyslimit = mLimitManager.getGenesysLimit(getSelectText(spinner));
+                // 添加空值检查
+                if (genesyslimit != null) {
+                    //同时通知整个界面都显示该禁卡表的禁限情况
+                    mCallBack.setLimit(genesyslimit, "初始化 genesys 禁卡表");
+                    mICardSearcher.setLimitList(genesyslimit);
+                } else {
+                    // 可以选择设置一个默认的LimitList或空的LimitList
+                    mCallBack.setLimit(new LimitList(), "初始化 常规 禁卡表 - 标题");
+                    mICardSearcher.setLimitList(new LimitList());
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void refreshLimitListSpinnerItems(Spinner spinner) {
+        // 首先清除所有现有的item
+        if (spinner.getAdapter() != null && spinner.getAdapter() instanceof SimpleSpinnerAdapter) {
+            //清空选项
+            ((SimpleSpinnerAdapter) spinner.getAdapter()).clear();
+            //重新加载禁卡表，获取可能存在的变动后情况
+            mLimitManager.load();
+        }
+        initLimitListSpinners(spinner);
+    }
+
+    private void refreshGenesysLimitListSpinnerItems(Spinner spinner) {
+        // 首先清除所有现有的item
+        if (spinner.getAdapter() != null && spinner.getAdapter() instanceof SimpleSpinnerAdapter) {
+            //清空选项
+            ((SimpleSpinnerAdapter) spinner.getAdapter()).clear();
+            //重新加载禁卡表，获取可能存在的变动后情况
+            mLimitManager.load();
+        }
+        initGenesysLimitListSpinners(spinner);
+    }
+
+    private void initOtButtons() {
+        Drawable[] otIcon = new Drawable[]{
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "ot_ocg.png", 0, 0)),// OCG
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "ot_tcg.png", 0, 0)),// TCG
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "ot_custom.png", 0, 0)),// 自定义卡片
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "ot_sc.png", 0, 0)),// 简中
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "ot_ocgtcg.png", 0, 0)),// 非独有卡
+        };
+        otButtons = new Button[]{
+                view.findViewById(R.id.btn_ot_OCG),// OCG
+                view.findViewById(R.id.btn_ot_TCG),// TCG
+                view.findViewById(R.id.btn_ot_CUSTOM),// 自定义卡片
+                view.findViewById(R.id.btn_ot_SC),// 简中
+                view.findViewById(R.id.btn_ot_OCGTCG),// 非独有卡
+
+        };
+        for (int i = 0; i < otButtons.length; i++) {
+            //设置按钮样式
+            Button button = otButtons[i];
+            button.setCompoundDrawablePadding(4); // 图标和文字间距
+            // 设置图标
+            button.setCompoundDrawablesWithIntrinsicBounds(null, otIcon[i], null, null);
+
+            // 定义说明文字(从strings.conf提取以便随着语言切换而变化)
+            button.setText(mStringManager.getOtString(otIds[i].getId(), false));
+            int index = i;
+            button.setOnClickListener(v -> {
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    button.setTextColor(YGOUtil.c(R.color.gray));
+                    otList.remove(Integer.valueOf(otIds[index].getId()));
+                } else {
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    button.setTextColor(YGOUtil.c(R.color.yellow));
+                    if (!otList.contains(otIds[index].getId())) {
+                        otList.add(otIds[index].getId());
+                    }
+                }
+            });
+        }
+        gl_ot.setVisibility(View.GONE);
+        iv_hide_ot.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 初始化时默认为折叠状态
+        view.findViewById(R.id.ll_ot).setOnClickListener(v -> {
+            if (gl_ot.getVisibility() == View.VISIBLE) {
+                resetOt();
+            } else {
+                gl_ot.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_ot.setVisibility(View.VISIBLE);
+                iv_hide_ot.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initSetnameSearchFeature() {
+        // 以布局点击事件作为初始化
+        tag_setcode.setVisibility(View.GONE);
+        iv_hide_setCode.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        view.findViewById(R.id.ll_setcode).setOnClickListener(v -> {
+            if (tag_setcode.getVisibility() == View.VISIBLE) {
+                resetSetcode();
+            } else {
+                tag_setcode.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                tag_setcode.setVisibility(View.VISIBLE);
+                iv_hide_setCode.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+                showSetnameSearchableDialog();
+            }
+        });
+        tag_setcode.setOnClickListener(v -> {
+            showSetnameSearchableDialog();
+        });
+        RadioGroup radioGroupSetcode = findViewById(R.id.radio_group_setcode);// 切换怪兽类型内部逻辑
+        radioGroupSetcode.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_and_setcode) {
+                setcode_isAnd = true;
+            } else if (checkedId == R.id.rb_or_setcode) {
+                setcode_isAnd = false;
+            }
+        });
+        // 初始化时确保提示文本正确显示
+        updateSetcodeHintVisibility();
+    }
+
+    private void showSetnameSearchableDialog() {
+        // 获取所有 setname 数据
+        List<CardSet> setnames = mStringManager.getCardSets();
+
+        // 创建用于显示的列表和映射
+        List<Object> displayItems = new ArrayList<>();
+        List<CardSet> setcode = new ArrayList<>();
+
+        // 添加"无字段"选项
+        displayItems.add(getString(R.string.label_set_No_Setcode));
+        setcode.add(null); // 对应"无字段"选项
+
+        // 添加所有 setname
+        for (CardSet set : setnames) {
+            displayItems.add(set.getName());
+            setcode.add(set);
+        }
+
+        // 创建 SearchableListDialog
+        SearchableListDialog dialog = new SearchableListDialog(mContext);
+        dialog.setTitle(getString(R.string.label_set));
+
+        // 设置标签删除监听器
+        dialog.setOnTagDeleteListener(tagName -> {
+            // 在 tag_setcode 中查找并删除对应的标签
+            for (int i = 0; i < tag_setcode.getChildCount(); i++) {
+                View child = tag_setcode.getChildAt(i);
+                if (child instanceof LinearLayout) {
+                    LinearLayout tagLayout = (LinearLayout) child;
+                    if (tagLayout.getChildCount() >= 1 &&
+                            tagLayout.getChildAt(0) instanceof TextView) {
+                        TextView textView = (TextView) tagLayout.getChildAt(0);
+                        if (tagName.equals(textView.getText().toString())) {
+                            // 找到匹配的标签，从 tag_setcode 中移除
+                            tag_setcode.removeViewAt(i);
+
+                            // 同时从 setCodeList 中移除对应的 ID
+                            if (tagName.equals(getString(R.string.label_set_No_Setcode))) {
+                                setCodeList.remove(Long.valueOf(-1L));
+                            } else {
+                                // 查找对应的 CardSet 并移除其 code
+                                for (CardSet set : setnames) {
+                                    if (set.getName().equals(tagName)) {
+                                        setCodeList.remove(Long.valueOf(set.getCode()));
+                                        break;
+                                    }
+                                }
+                            }
+                            break; // 找到并删除后退出循环
+                        }
+                    }
+                }
+            }
+            // 更新提示文本的可见性
+            updateSetcodeHintVisibility();
+        });
+
+        // 在显示对话框前，将当前已选的标签添加到对话框
+        for (long setCodeId : setCodeList) {
+            if (setCodeId == -1L) {
+                // 处理"无字段"选项
+                dialog.addTagToListFrom(getString(R.string.label_set_No_Setcode));
+            } else {
+                // 查找对应的 setname 并添加
+                for (CardSet set : setnames) {
+                    if (set.getCode() == setCodeId) {
+                        dialog.addTagToListFrom(set.getName());
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 设置点击监听器
+        dialog.setOnSearchableItemClickListener((item, position) -> {
+            // 通过 item 内容判断是否为"无字段"选项
+            if (item.toString().equals(getString(R.string.label_set_No_Setcode))) {
+                // 处理"无setcode"选项
+                if (!setCodeList.contains(-1L)) {
+                    setCodeList.add(-1L);
+                    addSetcodeTag(getString(R.string.label_set_No_Setcode), -1L);
+                    // 如果对话框中有相同标签，也要添加
+                    dialog.addTagToListFrom(getString(R.string.label_set_No_Setcode));
+                }
+            } else {
+                // 从映射中获取 CardSet 对象
+                // 遍历 setcode 列表找到匹配的项
+                CardSet selectedSet = null;
+                for (int i = 0; i < setcode.size(); i++) {
+                    CardSet set = setcode.get(i);
+                    if (set != null && set.getName().equals(item.toString())) {
+                        selectedSet = set;
+                        break;
+                    }
+                }
+
+                if (selectedSet != null) {
+                    long setCode = selectedSet.getCode();
+                    String setName = selectedSet.getName();
+
+                    // 添加到 setCodeList (避免重复)
+                    if (!setCodeList.contains(setCode)) {
+                        setCodeList.add(setCode);
+                        addSetcodeTag(setName, setCode);
+                        // 如果对话框中有相同标签，也要添加
+                        dialog.addTagToListFrom(setName);
+                    }
+                }
+            }
+        });
+
+        // 显示对话框
+        dialog.show(displayItems);
+    }
+
+    // 在界面上添加 setcode 标签
+    private void addSetcodeTag(String setName, long setCode) {
+        // 创建标签容器布局
+        LinearLayout tagLayout = new LinearLayout(mContext);
+        tagLayout.setOrientation(LinearLayout.HORIZONTAL);
+        tagLayout.setBackgroundResource(R.drawable.selected); // 使用适当的背景资源
+        tagLayout.setPadding(8, 4, 8, 4);
+        // 创建布局参数并设置边距
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(2, 2, 2, 2);
+        tagLayout.setLayoutParams(params); // 应用布局参数
+
+        // 创建标签文本
+        TextView tagView = new TextView(mContext);
+        tagView.setText(setName);
+        tagView.setGravity(Gravity.CENTER);
+        tagView.setTextColor(YGOUtil.c(R.color.gold));
+        tagView.setPadding(8, 0, 8, 0);
+        tagView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        // 将文本添加到标签容器
+        tagLayout.addView(tagView);
+
+        // 将新标签添加到容器中
+        tag_setcode.addView(tagLayout);
+
+        // 检查是否需要隐藏提示文本
+        updateSetcodeHintVisibility();
+    }
+
+    // 更新 setcode 提示文本的可见性
+    private void updateSetcodeHintVisibility() {
+        // 计算除了初始的 tv_setcode 之外的标签数量
+        int actualTagCount = tag_setcode.getChildCount() - 1; // 减去1是因为保留了初始的提示标签
+
+        // 获取 tv_setcode 引用（它是布局中的第一个子视图）
+        if (tag_setcode.getChildCount() > 0) {
+            View firstChild = tag_setcode.getChildAt(0);
+            if (firstChild instanceof TextView &&
+                    firstChild.getId() == R.id.tv_setcode) {
+                // 如果实际标签数量大于0，隐藏提示文本；否则显示提示文本
+                firstChild.setVisibility(actualTagCount > 0 ? View.GONE : View.VISIBLE);
+            }
+        }
+    }
+
+    private void initCategoryButtons() {
+        Drawable[] categoryIcon = new Drawable[]{
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_destroySpellTrap.png", 0, 0)),// 魔陷破坏
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_destroyMonster.png", 0, 0)),// 怪兽破坏
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_banish.png", 0, 0)),// 卡片除外
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_sendToGraveyard.png", 0, 0)),// 送去墓地
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_returnToHand.png", 0, 0)),// 返回手卡
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_returnToDeck.png", 0, 0)),// 返回卡组
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_destroyHand.png", 0, 0)),// 手卡破坏
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_destroyDeck.png", 0, 0)),// 卡组破坏
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_draw.png", 0, 0)),// 抽卡辅助
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_search.png", 0, 0)),// 卡组检索
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_recovery.png", 0, 0)),// 卡片回收
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_position.png", 0, 0)),// 表示形式
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_control.png", 0, 0)),// 控制权
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_changeAtkDef.png", 0, 0)),// 攻守变化
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_piercing.png", 0, 0)),// 穿刺伤害
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_repeatAttack.png", 0, 0)),// 多次攻击
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_limitAttack.png", 0, 0)),// 攻击限制
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_directAttack.png", 0, 0)),// 直接攻击
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_specialSummon.png", 0, 0)),// 特殊召唤
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_token.png", 0, 0)),// 衍生物
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_raceRelated.png", 0, 0)),// 种族相关
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_attributeRelated.png", 0, 0)),// 属性相关
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_damageLP.png", 0, 0)),// LP伤害
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_recoverLP.png", 0, 0)),// LP回复
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_undestroyable.png", 0, 0)),// 破坏耐性
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_ineffective.png", 0, 0)),// 效果耐性
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_counter.png", 0, 0)),// 指示物
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_gamble.png", 0, 0)),// 幸运
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_fusionRelated.png", 0, 0)),// 融合相关
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_synchroRelated.png", 0, 0)),// 同调相关
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_xyzRelated.png", 0, 0)),// 超量相关
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "category_negateEffect.png", 0, 0)),// 效果无效
+        };
+        categoryButtons = new Button[]{
+                view.findViewById(R.id.btn_category_destroySpellTrap),// 魔陷破坏
+                view.findViewById(R.id.btn_category_destroyMonster),// 怪兽破坏
+                view.findViewById(R.id.btn_category_banish),// 卡片除外
+                view.findViewById(R.id.btn_category_sendToGraveyard),// 送去墓地
+                view.findViewById(R.id.btn_category_returnToHand),// 返回手卡
+                view.findViewById(R.id.btn_category_returnToDeck),// 返回卡组
+                view.findViewById(R.id.btn_category_destroyHand),// 手卡破坏
+                view.findViewById(R.id.btn_category_destroyDeck),// 卡组破坏
+                view.findViewById(R.id.btn_category_draw),// 抽卡辅助
+                view.findViewById(R.id.btn_category_search),// 卡组检索
+                view.findViewById(R.id.btn_category_recovery),// 卡片回收
+                view.findViewById(R.id.btn_category_position),// 表示形式
+                view.findViewById(R.id.btn_category_control),// 控制权
+                view.findViewById(R.id.btn_category_changeAtkDef),// 攻守变化
+                view.findViewById(R.id.btn_category_piercing),// 穿刺伤害
+                view.findViewById(R.id.btn_category_repeatAttack),// 多次攻击
+                view.findViewById(R.id.btn_category_limitAttack),// 攻击限制
+                view.findViewById(R.id.btn_category_directAttack),// 直接攻击
+                view.findViewById(R.id.btn_category_specialSummon),// 特殊召唤
+                view.findViewById(R.id.btn_category_token),// 衍生物
+                view.findViewById(R.id.btn_category_raceRelated),// 种族相关
+                view.findViewById(R.id.btn_category_attributeRelated),// 属性相关
+                view.findViewById(R.id.btn_category_damageLP),// LP伤害
+                view.findViewById(R.id.btn_category_recoverLP),// LP回复
+                view.findViewById(R.id.btn_category_undestroyable),// 破坏耐性
+                view.findViewById(R.id.btn_category_ineffective),// 效果耐性
+                view.findViewById(R.id.btn_category_counter),// 指示物
+                view.findViewById(R.id.btn_category_gamble),// 幸运
+                view.findViewById(R.id.btn_category_fusionRelated),// 融合相关
+                view.findViewById(R.id.btn_category_synchroRelated),// 同调相关
+                view.findViewById(R.id.btn_category_xyzRelated),// 超量相关
+                view.findViewById(R.id.btn_category_negateEffect)// 效果无效
+        };
+
+        for (int i = 0; i < categoryButtons.length; i++) {
+            //设置按钮样式
+            Button button = categoryButtons[i];
+            button.setCompoundDrawablePadding(4); // 图标和文字间距
+            // 设置图标
+            button.setCompoundDrawablesWithIntrinsicBounds(categoryIcon[i], null, null, null);
+
+            // 定义说明文字(从strings.conf提取以便随着语言切换而变化)
+            button.setText(mStringManager.getCategoryString(categories[i].value()));
+            int index = i;
+            button.setOnClickListener(v -> {
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    button.setTextColor(YGOUtil.c(R.color.gray));
+                    categoryList.remove(categories[index].value());
+                } else {
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    button.setTextColor(YGOUtil.c(R.color.yellow));
+                    if (!categoryList.contains(categories[index].value())) {
+                        categoryList.add(categories[index].value());
+                    }
+                }
+            });
+        }
+        gl_category.setVisibility(View.GONE);
+        iv_hide_category.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 初始化时默认为折叠状态
+        view.findViewById(R.id.ll_category).setOnClickListener(v -> {
+            if (gl_category.getVisibility() == View.VISIBLE) {
+                resetCategory();
+            } else {
+                gl_category.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_category.setVisibility(View.VISIBLE);
+                iv_hide_category.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initTypeButtons() {
+        // 定义图标资源ID数组
+        final Drawable[] cardTypeIcon = {
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "cardType_monster.png", 0, 0)),// 速攻图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "cardType_spell.png", 0, 0)),// 永续图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "cardType_trap.png", 0, 0)),// 装备图标
+        };
+
+        cardTypeButtons = new Button[]{
+                view.findViewById(R.id.btn_type_monster),
+                view.findViewById(R.id.btn_type_spell),
+                view.findViewById(R.id.btn_type_trap)
+        };
+        typeIds = new long[]{
+                CardType.Monster.getId(),
+                CardType.Spell.getId(),
+                CardType.Trap.getId()
+        };
+        for (int i = 0; i < cardTypeButtons.length; i++) {
+            final int index = i;
+            //设置按钮样式
+            Button button = cardTypeButtons[index];
+            button.setCompoundDrawablePadding(4); // 图标和文字间距
+            // 设置图标
+            button.setCompoundDrawablesWithIntrinsicBounds(cardTypeIcon[index], null, null, null);
+
+            // 定义说明文字(从strings.conf提取以便随着语言切换而变化)
+            button.setText(mStringManager.getTypeString(typeIds[index]));
+
+            button.setOnClickListener(v -> {
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    button.setTextColor(YGOUtil.c(R.color.gray));
+                } else {
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    button.setTextColor(YGOUtil.c(R.color.yellow));
+                }
+
+                if (!cardTypeButtons[0].isSelected()) {// 怪兽卡
+                    layout_monster.setVisibility(View.GONE);
+                    resetMonster();
+                } else {
+                    layout_monster.setVisibility(View.VISIBLE);
+                    if (!cardTypeList.contains(typeIds[0])) {
+                        cardTypeList.add(typeIds[0]);
+                    }
+                }
+
+                if (cardTypeButtons[1].isSelected() || cardTypeButtons[2].isSelected()) {// 魔法陷阱卡被选中时显示图标栏
+                    ll_icon.setVisibility(View.VISIBLE);
+                } else {
+                    ll_icon.setVisibility(View.GONE);//不选择魔法和陷阱类型时隐藏图标栏
+                    // 取消选择所有可能被选中的图标，以免视觉上误导条件
+                    for (int j = 0; j < iconButtons.length; j++) {
+                        if (iconButtons[j].isSelected()) {
+                            iconButtons[j].setSelected(false);
+                            iconButtons[j].setTextColor(YGOUtil.c(R.color.gray));
+                            iconButtons[j].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                        }
+
+                    }
+                    cardTypeList.remove(typeIds[1]);
+                    cardTypeList.remove(typeIds[2]);
+                    spellTrapTypeList.clear();
+                }
+                if (cardTypeButtons[1].isSelected()) {// 魔法卡
+                    iconButtons[0].setVisibility(View.VISIBLE);// 速攻0
+                    iconButtons[2].setVisibility(View.VISIBLE);// 装备2
+                    iconButtons[3].setVisibility(View.VISIBLE);// 场地3
+                    iconButtons[5].setVisibility(View.VISIBLE);// 仪式5
+
+                    if (!cardTypeList.contains(typeIds[1])) {
+                        cardTypeList.add(typeIds[1]);
+                    }
+                } else {
+                    iconButtons[0].setVisibility(View.GONE);//速攻0
+                    iconButtons[2].setVisibility(View.GONE);//装备2
+                    iconButtons[3].setVisibility(View.GONE);//场地3
+                    iconButtons[5].setVisibility(View.GONE);//仪式5
+
+                    resetSpell();// 重置魔法相关按钮的选中状态
+                }
+
+                if (cardTypeButtons[2].isSelected()) {// 陷阱卡
+                    iconButtons[4].setVisibility(View.VISIBLE);// 反击4
+                    if (!cardTypeList.contains(typeIds[2])) {
+                        cardTypeList.add(typeIds[2]);
+                    }
+                } else {
+                    //反击陷阱4
+                    iconButtons[4].setVisibility(View.GONE);
+                    resetTrap();
+                }
+
+                if (!cardTypeButtons[0].isSelected() && !cardTypeButtons[1].isSelected() && !cardTypeButtons[2].isSelected()) {// 全没选中时显示全部
+                    layout_monster.setVisibility(View.VISIBLE);
+                    ll_icon.setVisibility(View.VISIBLE);
+                    //魔法图标
+                    iconButtons[0].setVisibility(View.VISIBLE);// 速攻0
+                    iconButtons[2].setVisibility(View.VISIBLE);// 装备2
+                    iconButtons[3].setVisibility(View.VISIBLE);// 场地3
+                    iconButtons[5].setVisibility(View.VISIBLE);// 仪式5
+                    //陷阱图标
+                    iconButtons[4].setVisibility(View.VISIBLE);// 反击4
+                }
+                Log.i("CardSearcher", "[卡片种类]:" + cardTypeList);
+            });
+        }
+        gl_cardType.setVisibility(View.GONE);
+        iv_hide_cardType.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 默认折叠状态
+        view.findViewById(R.id.ll_cardType).setOnClickListener(v -> {
+            if (gl_cardType.getVisibility() == View.VISIBLE) {
+                resetCardType();
+            } else {
+                gl_cardType.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_cardType.setVisibility(View.VISIBLE);
+                iv_hide_cardType.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initIconButtons() {
+        // 定义图标资源ID数组
+        final Drawable[] Icons = {
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "quickplay.png", 0, 0)),// 速攻图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "continuous.png", 0, 0)),// 永续图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "equip.png", 0, 0)),// 装备图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "field.png", 0, 0)),// 场地图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "counter.png", 0, 0)),// 反击图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "ritual.png", 0, 0)),// 仪式图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "normal.png", 0, 0)),// 通常图标
+        };
+        iconButtons = new Button[]{
+                view.findViewById(R.id.btn_icon_quickPlay),// 速攻0
+                view.findViewById(R.id.btn_icon_continuous),// 永续1
+                view.findViewById(R.id.btn_icon_equip),// 装备2
+                view.findViewById(R.id.btn_icon_field),// 场地3
+                view.findViewById(R.id.btn_icon_counter),// 反击4
+                view.findViewById(R.id.btn_icon_ritual),// 仪式5
+                view.findViewById(R.id.btn_icon_normal),// 通常6
+        };
+        // 定义属性对应的ID值，使用long类型
+        iconIds = new long[]{
+                CardType.QuickPlay.getId(),// 速攻
+                CardType.Continuous.getId(),// 永续
+                CardType.Equip.getId(),// 装备
+                CardType.Field.getId(),// 场地
+                CardType.Counter.getId(),// 反击
+                CardType.Ritual.getId(),// 仪式
+                CardType.Normal.getId()// 通常（是指通常怪兽，这里只用于获取strings.conf对应的文本）
+        };
+
+        for (int i = 0; i < iconButtons.length; i++) {
+            final int index = i;
+            //设置按钮样式
+            Button button = iconButtons[index];
+            button.setCompoundDrawablePadding(4); // 图标和文字间距
+            // 设置图标
+            button.setCompoundDrawablesWithIntrinsicBounds(null, Icons[index], null, null);
+
+            // 定义说明文字(从strings.conf提取以便随着语言切换而变化)
+            button.setText(mStringManager.getTypeString(iconIds[index]));
+
+            button.setOnClickListener(v -> {
+                if (spellTrapTypeList == null) {
+                    spellTrapTypeList = new ArrayList<>();
+                }
+
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    button.setTextColor(YGOUtil.c(R.color.gray));
+                    spellTrapTypeList.remove(iconIds[index]);
+                } else {//未选中时的逻辑
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    button.setTextColor(YGOUtil.c(R.color.yellow));
+                    if (!spellTrapTypeList.contains(iconIds[index])) {
+                        spellTrapTypeList.add(iconIds[index]);
+                    }
+                }
+                Log.d("CardSearcher", "[魔陷图标]包含种类:" + spellTrapTypeList);
+            });
+        }
+        gl_icon.setVisibility(View.GONE);
+        iv_hide_spelltrap.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 默认为折叠状态
+        view.findViewById(R.id.ll_icon).setOnClickListener(v -> {
+            if (gl_icon.getVisibility() == View.VISIBLE) {
+                resetIcons();
+            } else {
+                gl_icon.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_icon.setVisibility(View.VISIBLE);
+                iv_hide_spelltrap.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initAttributeButtons() {
+        // 定义图标资源ID数组
+        final Drawable[] attributeIcons = {
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "earth.png", 0, 0)),// 地属性图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "water.png", 0, 0)),// 水属性图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "fire.png", 0, 0)),// 火属性图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "wind.png", 0, 0)),// 风属性图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "light.png", 0, 0)),// 光属性图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "dark.png", 0, 0)),// 暗属性图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "divine.png", 0, 0)),// 神属性图标
+        };
+
+        // 初始化属性按钮
+        attributeButtons = new Button[]{
+                view.findViewById(R.id.btn_attr_earth),// 地
+                view.findViewById(R.id.btn_attr_water),// 水
+                view.findViewById(R.id.btn_attr_fire),// 火
+                view.findViewById(R.id.btn_attr_wind),// 风
+                view.findViewById(R.id.btn_attr_light),// 光
+                view.findViewById(R.id.btn_attr_dark),// 暗
+                view.findViewById(R.id.btn_attr_divine)// 神
+        };
+
+        for (int i = 0; i < attributeButtons.length; i++) {
+            final int index = i;
+            final long attributeId = attributeIds[i].getId();
+            //设置按钮样式
+            Button button = attributeButtons[index];
+            button.setCompoundDrawablePadding(4); // 图标和文字间距
+            // 设置图标
+            button.setCompoundDrawablesWithIntrinsicBounds(null, attributeIcons[index], null, null);
+
+            // 定义说明文字(从strings.conf提取以便随着语言切换而变化)
+            button.setText(mStringManager.getAttributeString(attributeId));
+
+            button.setOnClickListener(v -> {
+                if (attributeList == null) {
+                    attributeList = new ArrayList<>();
+                }
+
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    button.setTextColor(YGOUtil.c(R.color.gray));
+                    attributeList.remove(attributeId);
+                } else {
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    button.setTextColor(YGOUtil.c(R.color.yellow));
+                    if (!attributeList.contains(attributeId)) {
+                        attributeList.add(attributeId);
+                    }
+                }
+            });
+        }
+        gl_attr.setVisibility(View.GONE);
+        iv_hide_attr.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        view.findViewById(R.id.ll_attr).setOnClickListener(v -> {
+            if (gl_attr.getVisibility() == View.VISIBLE) {
+                resetAttribute();// 点击解除所有选择的属性
+            } else {
+                gl_attr.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_attr.setVisibility(View.VISIBLE);
+                iv_hide_attr.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initRaceButtons() {
+        // 定义图标资源ID数组
+        final Drawable[] raceIcons = {
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "warrior.png", 0, 0)),// 战士族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "spellcaster.png", 0, 0)),// 魔法师族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "fairy.png", 0, 0)),// 天使族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "fiend.png", 0, 0)),// 恶魔族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "zombie.png", 0, 0)),// 不死族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "machine.png", 0, 0)),// 机械族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "aqua.png", 0, 0)),// 水族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "pyro.png", 0, 0)),// 炎族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "rock.png", 0, 0)),// 岩石族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "winged_beast.png", 0, 0)),// 鸟兽族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "plant.png", 0, 0)),// 植物族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "insect.png", 0, 0)),// 昆虫族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "thunder.png", 0, 0)),// 雷族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "dragon.png", 0, 0)),// 龙族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "beast.png", 0, 0)),// 兽族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "beast_warrior.png", 0, 0)),// 兽战士族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "dinosaur.png", 0, 0)),// 恐龙族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "fish.png", 0, 0)),// 鱼族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "sea_serpent.png", 0, 0)),// 海龙族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "reptile.png", 0, 0)),// 爬虫类族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "psychic.png", 0, 0)),// 念动力族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "divine_beast.png", 0, 0)),// 幻神兽族图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "creator_god.png", 0, 0)),// 创造神图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "wyrm.png", 0, 0)),// 幻龙图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "cyberse.png", 0, 0)),// 电子界图标
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "illusion.png", 0, 0)),// 幻想魔图标
+        };
+
+        // 初始化属性按钮
+        raceButtons = new Button[]{
+                view.findViewById(R.id.btn_race_warrior),// 战士
+                view.findViewById(R.id.btn_race_spellcaster),// 魔法师
+                view.findViewById(R.id.btn_race_fairy),// 天使
+                view.findViewById(R.id.btn_race_fiend),// 恶魔
+                view.findViewById(R.id.btn_race_zombie),// 不死
+                view.findViewById(R.id.btn_race_machine),// 机械
+                view.findViewById(R.id.btn_race_aqua),// 水
+                view.findViewById(R.id.btn_race_pyro),// 炎
+                view.findViewById(R.id.btn_race_rock),// 岩石
+                view.findViewById(R.id.btn_race_wingedBeast),// 鸟兽
+                view.findViewById(R.id.btn_race_plant),// 植物
+                view.findViewById(R.id.btn_race_insect),// 昆虫
+                view.findViewById(R.id.btn_race_thunder),// 雷
+                view.findViewById(R.id.btn_race_dragon),// 龙
+                view.findViewById(R.id.btn_race_beast),// 兽
+                view.findViewById(R.id.btn_race_beastWarrior),// 兽战士
+                view.findViewById(R.id.btn_race_dinosaur),// 恐龙
+                view.findViewById(R.id.btn_race_fish),// 鱼
+                view.findViewById(R.id.btn_race_seaSerpent),// 海龙
+                view.findViewById(R.id.btn_race_reptile),// 爬虫类
+                view.findViewById(R.id.btn_race_psychic),// 念动力
+                view.findViewById(R.id.btn_race_divineBeast),// 幻神兽
+                view.findViewById(R.id.btn_race_creatorGod),// 创造神
+                view.findViewById(R.id.btn_race_wyrm),// 幻龙
+                view.findViewById(R.id.btn_race_cyberse),// 电子界
+                view.findViewById(R.id.btn_race_illusion),// 幻想魔
+        };
+
+        for (int i = 0; i < raceButtons.length; i++) {
+            final int index = i;
+            final long raceId = raceIds[i].value();
+            //设置按钮样式
+            Button button = raceButtons[index];
+            button.setCompoundDrawablePadding(4); // 图标和文字间距
+            // 设置图标
+            button.setCompoundDrawablesWithIntrinsicBounds(raceIcons[index], null, null, null);
+
+            // 定义说明文字(从strings.conf提取以便随着语言切换而变化)
+            button.setText(mStringManager.getRaceString(raceId));
+
+            raceButtons[i].setOnClickListener(v -> {
+                if (raceList == null) {
+                    raceList = new ArrayList<>();
+                }
+
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    button.setTextColor(YGOUtil.c(R.color.gray));
+                    raceList.remove(raceId);
+                } else {
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    button.setTextColor(YGOUtil.c(R.color.yellow));
+                    if (!raceList.contains(raceId))
+                        raceList.add(raceId);
+                }
+            });
+        }
+        gl_race.setVisibility(View.GONE);
+        iv_hide_race.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 初始化时默认为折叠状态
+        view.findViewById(R.id.ll_race).setOnClickListener(v -> {
+            if (gl_race.getVisibility() == View.VISIBLE) {
+                resetRace();
+            } else {
+                gl_race.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_race.setVisibility(View.VISIBLE);
+                iv_hide_race.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initMonsterTypeButtons() {
+        TypeIcon = new Drawable[]{
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_normal.png", 0, 0)),// 通常
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_effect.png", 0, 0)),// 效果
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_fusion.png", 0, 0)),// 融合
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_ritual.png", 0, 0)),// 仪式
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_spirit.png", 0, 0)),// 灵魂
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_union.png", 0, 0)),// 同盟
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_gemini.png", 0, 0)),// 二重
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_tuner.png", 0, 0)),// 调整
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_synchro.png", 0, 0)),// 同调
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_flip.png", 0, 0)),// 反转
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_toon.png", 0, 0)),// 卡通
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_xyz.png", 0, 0)),// 超量
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_pendulum.png", 0, 0)),// 灵摆
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_specialSummon.png", 0, 0)),// 特殊召唤
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_link.png", 0, 0)),// 连接
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "type_token.png", 0, 0)),// 衍生物
+        };
+        monsterTypeButtons = new Button[]{
+                view.findViewById(R.id.btn_type_normal),// 通常
+                view.findViewById(R.id.btn_type_effect),// 效果
+                view.findViewById(R.id.btn_type_fusion),// 融合
+                view.findViewById(R.id.btn_type_ritual),// 仪式
+                view.findViewById(R.id.btn_type_spirit),// 灵魂
+                view.findViewById(R.id.btn_type_union),// 同盟
+                view.findViewById(R.id.btn_type_gemini),// 二重
+                view.findViewById(R.id.btn_type_tuner),// 调整
+                view.findViewById(R.id.btn_type_synchro),// 同调
+                view.findViewById(R.id.btn_type_flip),// 反转
+                view.findViewById(R.id.btn_type_toon),// 卡通
+                view.findViewById(R.id.btn_type_xyz),// 超量
+                view.findViewById(R.id.btn_type_pendulum),// 灵摆
+                view.findViewById(R.id.btn_type_specialSummon),// 特殊召唤
+                view.findViewById(R.id.btn_type_link),// 连接
+                view.findViewById(R.id.btn_type_token)// 衍生物
+        };
+        monsterTypeIds = new long[]{
+                CardType.Normal.getId(),
+                CardType.Effect.getId(),
+                CardType.Fusion.getId(),
+                CardType.Ritual.getId(),
+                CardType.Spirit.getId(),
+                CardType.Union.getId(),
+                CardType.Gemini.getId(),
+                CardType.Tuner.getId(),
+                CardType.Synchro.getId(),
+                CardType.Flip.getId(),
+                CardType.Toon.getId(),
+                CardType.Xyz.getId(),
+                CardType.Pendulum.getId(),
+                CardType.Sp_Summon.getId(),
+                CardType.Link.getId(),
+                CardType.Token.getId()
+        };
+        for (int i = 0; i < monsterTypeButtons.length; i++) {
+            final int index = i;
+            //设置按钮样式
+            Button button = monsterTypeButtons[index];
+            button.setText(mStringManager.getTypeString(monsterTypeIds[i]));
+            // 设置图标
+            button.setCompoundDrawablesWithIntrinsicBounds(TypeIcon[index], null, null, null);
+            button.setOnClickListener(v -> {
+                if (monsterTypeList == null) {
+                    monsterTypeList = new ArrayList<>();
+                }
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    button.setTextColor(YGOUtil.c(R.color.gray));
+                    monsterTypeList.remove(monsterTypeIds[index]);
+                } else {//未选中时的逻辑
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    button.setTextColor(YGOUtil.c(R.color.yellow));
+                    if (!monsterTypeList.contains(monsterTypeIds[index]))
+                        monsterTypeList.add(monsterTypeIds[index]);
+                }
+                Log.w("CardSearcher", "[怪兽 种类]:" + monsterTypeList);
+            });
+        }
+        RadioGroup radioGroup = findViewById(R.id.radio_group);// 切换怪兽类型内部逻辑
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_and) {
+                isAnd = true;
+            } else if (checkedId == R.id.rb_or) {
+                isAnd = false;
+            }
+        });
+        gl_monsterType.setVisibility(View.GONE);
+        iv_hide_monsterType.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 初始化时默认为折叠状态
+        view.findViewById(R.id.ll_monsterType).setOnClickListener(v -> {
+            if (gl_monsterType.getVisibility() == View.VISIBLE) {
+                resetMonsterType();
+            } else {
+                gl_monsterType.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_monsterType.setVisibility(View.VISIBLE);
+                iv_hide_monsterType.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initExcludeTypeButtons() {
+        exclude_typeButtons = new Button[]{
+                view.findViewById(R.id.btn_exclude_type_normal),// 通常
+                view.findViewById(R.id.btn_exclude_type_effect),// 效果
+                view.findViewById(R.id.btn_exclude_type_fusion),// 融合
+                view.findViewById(R.id.btn_exclude_type_ritual),// 仪式
+                view.findViewById(R.id.btn_exclude_type_spirit),// 灵魂
+                view.findViewById(R.id.btn_exclude_type_union),// 同盟
+                view.findViewById(R.id.btn_exclude_type_gemini),// 二重
+                view.findViewById(R.id.btn_exclude_type_tuner),// 调整
+                view.findViewById(R.id.btn_exclude_type_synchro),// 同调
+                view.findViewById(R.id.btn_exclude_type_flip),// 反转
+                view.findViewById(R.id.btn_exclude_type_toon),// 卡通
+                view.findViewById(R.id.btn_exclude_type_xyz),// 超量
+                view.findViewById(R.id.btn_exclude_type_pendulum),// 灵摆
+                view.findViewById(R.id.btn_exclude_type_specialSummon),// 特殊召唤
+                view.findViewById(R.id.btn_exclude_type_link),// 连接
+                view.findViewById(R.id.btn_exclude_type_token)// 衍生物
+        };
+        for (int i = 0; i < exclude_typeButtons.length; i++) {
+            final int index = i;
+            //设置按钮样式
+            Button button = exclude_typeButtons[index];
+            button.setText(mStringManager.getTypeString(monsterTypeIds[i]));
+            // 设置图标
+            button.setCompoundDrawablesWithIntrinsicBounds(TypeIcon[index], null, null, null);
+            button.setOnClickListener(v -> {
+                if (excludeTypeList == null) {
+                    excludeTypeList = new ArrayList<>();
+                }
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    button.setTextColor(YGOUtil.c(R.color.gray));
+                    excludeTypeList.remove(monsterTypeIds[index]);
+                } else {//未选中时的逻辑
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius_p));
+                    button.setTextColor(YGOUtil.c(R.color.yellow));
+                    if (!excludeTypeList.contains(monsterTypeIds[index]))
+                        excludeTypeList.add(monsterTypeIds[index]);
+                }
+                Log.w("CardSearcher", "[排除种类]:" + excludeTypeList);
+            });
+        }
+        gl_exclude_type.setVisibility(View.GONE);
+        iv_hide_exclude_type.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 初始化时默认为折叠状态
+        view.findViewById(R.id.ll_excludeType).setOnClickListener(v -> {
+            if (gl_exclude_type.getVisibility() == View.VISIBLE) {
+                resetExcludeType();// 解除所有选中的排除怪兽子种类
+            } else {
+                gl_exclude_type.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_exclude_type.setVisibility(View.VISIBLE);
+                iv_hide_exclude_type.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initLevelButtons() {
+        //从一个整体图片中裁切出13个数字图片
+        Bitmap chainNumber = BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/number.png", 0, 0);
+        int width = chainNumber.getWidth() / 5;
+        int height = chainNumber.getHeight() / 4;
+
+        final Drawable[] numberIcon = new Drawable[]{
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, 0, 0, width, height)),// 1
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width, 0, width, height)),// 2
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width * 2, 0, width, height)),// 3
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width * 3, 0, width, height)),// 4
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width * 4, 0, width, height)),// 5
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, 0, height, width, height)),// 6
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width, height, width, height)),// 7
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width * 2, height, width, height)),// 8
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width * 3, height, width, height)),// 9
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width * 4, height, width, height)),// 10
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, 0, height * 2, width, height)),// 11
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width, height * 2, width, height)),// 12
+                new BitmapDrawable(mContext.getResources(), Bitmap.createBitmap(chainNumber, width * 2, height * 2, width, height)),// 13
+        };
+
+        // 创建不同等级范围的背景图片数组
+        final Drawable[] backgrounds = new Drawable[13];
+        for (int i = 0; i < backgrounds.length; i++) {
+            if (i < 8) { // 等级1-8 (索引0-7)
+                Bitmap star1_8Bitmap = BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "star_1_8.png", 0, 0);
+                backgrounds[i] = new BitmapDrawable(mContext.getResources(), star1_8Bitmap);
+            } else if (i < 12) { // 等级9-12 (索引8-11)
+                Bitmap star9_12Bitmap = BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "star_9_12.png", 0, 0);
+                backgrounds[i] = new BitmapDrawable(mContext.getResources(), star9_12Bitmap);
+            } else { // 等级13 (索引12)
+                Bitmap rankBitmap = BitmapUtil.getBitmapFormAssets(mContext, ASSET_ATTR_RACE + "star_rank.png", 0, 0);
+                backgrounds[i] = new BitmapDrawable(mContext.getResources(), rankBitmap);
+            }
+        }
+
+        levelButtons = new ImageButton[]{
+                view.findViewById(R.id.btn_LRA_1),
+                view.findViewById(R.id.btn_LRA_2),
+                view.findViewById(R.id.btn_LRA_3),
+                view.findViewById(R.id.btn_LRA_4),
+                view.findViewById(R.id.btn_LRA_5),
+                view.findViewById(R.id.btn_LRA_6),
+                view.findViewById(R.id.btn_LRA_7),
+                view.findViewById(R.id.btn_LRA_8),
+                view.findViewById(R.id.btn_LRA_9),
+                view.findViewById(R.id.btn_LRA_10),
+                view.findViewById(R.id.btn_LRA_11),
+                view.findViewById(R.id.btn_LRA_12),
+                view.findViewById(R.id.btn_LRA_13)
+        };
+        for (int i = 0; i < levelButtons.length; i++) {
+            final int index = i;
+            //设置按钮样式
+            ImageButton button = levelButtons[index];
+            // 设置图标
+            // 创建图层：背景在下，前景（数字）在上
+            Drawable[] layers = new Drawable[2];
+            layers[0] = backgrounds[index]; // 背景
+            layers[1] = numberIcon[index];  // 数字
+            LayerDrawable layerDrawable = new LayerDrawable(layers);
+            // 设置前景的位置（居中）
+            int padding = 4; // 可调整边距
+            layerDrawable.setLayerInset(1, padding, padding, padding, padding);
+            button.setImageDrawable(layerDrawable);
+
+            button.setOnClickListener(v -> {
+                if (levelList == null) {
+                    levelList = new ArrayList<>();
+                }
+                Integer levelValue = index + 1;
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    levelList.remove(levelValue);
+                } else {//未选中时的逻辑
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    if (!levelList.contains(levelValue)) {
+                        levelList.add(levelValue);
+                    }
+                }
+            });
+        }
+        gl_level_rank_link.setVisibility(View.GONE);
+        iv_hide_level_rank_link.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 初始化时默认为折叠状态
+        view.findViewById(R.id.ll_level).setOnClickListener(v -> {
+            if (gl_level_rank_link.getVisibility() == View.VISIBLE) {
+                resetLevel();
+            } else {
+                gl_level_rank_link.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_level_rank_link.setVisibility(View.VISIBLE);
+                iv_hide_level_rank_link.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initPendulumScaleButtons() {
+        final Drawable[] PScaleIcon = new Drawable[]{
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/lscale_0.png", 0, 0)),// 0
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/lscale_1.png", 0, 0)),// 1
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/lscale_2.png", 0, 0)),// 2
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/lscale_3.png", 0, 0)),// 3
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/lscale_4.png", 0, 0)),// 4
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/lscale_5.png", 0, 0)),// 5
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/lscale_6.png", 0, 0)),// 6
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/rscale_7.png", 0, 0)),// 7
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/rscale_8.png", 0, 0)),// 8
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/rscale_9.png", 0, 0)),// 9
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/rscale_10.png", 0, 0)),// 10
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/rscale_11.png", 0, 0)),// 11
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/rscale_12.png", 0, 0)),// 12
+                new BitmapDrawable(mContext.getResources(), BitmapUtil.getBitmapFormAssets(mContext, ASSETS_PATH + "textures/extra/rscale_13.png", 0, 0)),// 13
+        };
+        pendulumScaleButtons = new ImageButton[]{
+                view.findViewById(R.id.btn_Pscale_0),
+                view.findViewById(R.id.btn_Pscale_1),
+                view.findViewById(R.id.btn_Pscale_2),
+                view.findViewById(R.id.btn_Pscale_3),
+                view.findViewById(R.id.btn_Pscale_4),
+                view.findViewById(R.id.btn_Pscale_5),
+                view.findViewById(R.id.btn_Pscale_6),
+                view.findViewById(R.id.btn_Pscale_7),
+                view.findViewById(R.id.btn_Pscale_8),
+                view.findViewById(R.id.btn_Pscale_9),
+                view.findViewById(R.id.btn_Pscale_10),
+                view.findViewById(R.id.btn_Pscale_11),
+                view.findViewById(R.id.btn_Pscale_12),
+                view.findViewById(R.id.btn_Pscale_13),
+        };
+        for (int i = 0; i < pendulumScaleButtons.length; i++) {
+            final Integer index = i;
+            //设置按钮样式
+            ImageButton button = pendulumScaleButtons[index];
+            // 设置图标
+            button.setImageDrawable(PScaleIcon[index]);
+            button.setOnClickListener(v -> {
+                if (pendulumScaleList == null) {
+                    pendulumScaleList = new ArrayList<>();
+                }
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                    button.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+                    pendulumScaleList.remove(index);
+                } else {//未选中时的逻辑
+                    button.setSelected(true);
+                    button.setBackground(mContext.getDrawable(R.drawable.radius));
+                    if (!pendulumScaleList.contains(index)) {
+                        pendulumScaleList.add(index);
+                    }
+                }
+            });
+        }
+        gl_pendulum_scale.setVisibility(View.GONE);
+        iv_hide_pendulum_scale.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 初始化时默认为折叠状态
+        view.findViewById(R.id.ll_pScale).setOnClickListener(v -> {
+            if (gl_pendulum_scale.getVisibility() == View.VISIBLE) {
+                resetPScale();
+            } else {
+                gl_pendulum_scale.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                gl_pendulum_scale.setVisibility(View.VISIBLE);
+                iv_hide_pendulum_scale.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initLinkMarkerButtons() {
+        Arrays.fill(BtnVals, "0");
+        linkButton = new Button[]{
+                view.findViewById(R.id.button_1),
+                view.findViewById(R.id.button_2),
+                view.findViewById(R.id.button_3),
+                view.findViewById(R.id.button_4),
+                view.findViewById(R.id.button_5),
+                view.findViewById(R.id.button_6),
+                view.findViewById(R.id.button_7),
+                view.findViewById(R.id.button_8),
+                view.findViewById(R.id.button_9)
+        };
+        enImgs = new int[]{
+                R.drawable.left_bottom_1,
+                R.drawable.bottom_1,
+                R.drawable.right_bottom_1,
+                R.drawable.left_1,
+                0,
+                R.drawable.right_1,
+                R.drawable.left_top_1,
+                R.drawable.top_1,
+                R.drawable.right_top_1,
+        };
+        disImgs = new int[]{
+                R.drawable.left_bottom_0,
+                R.drawable.bottom_0,
+                R.drawable.right_bottom_0,
+                R.drawable.left_0,
+                0,
+                R.drawable.right_0,
+                R.drawable.left_top_0,
+                R.drawable.top_0,
+                R.drawable.right_top_0,
+        };
+        for (int i = 0; i < linkButton.length; i++) {
+            final int index = i;
+            Button button = linkButton[index];
+            button.setOnClickListener((btn) -> {
+                if ("0".equals(BtnVals[index])) {
+                    btn.setBackgroundResource(enImgs[index]);
+                    BtnVals[index] = "1";
+                } else {
+                    btn.setBackgroundResource(disImgs[index]);
+                    BtnVals[index] = "0";
+                }
+                String mLinkStr = BtnVals[8] + BtnVals[7] + BtnVals[6] + BtnVals[5] + "0"
+                        + BtnVals[3] + BtnVals[2] + BtnVals[1] + BtnVals[0];
+                lineKey = Integer.parseInt(mLinkStr, 2);
+            });
+        }
+        ll_linkControl.setVisibility(View.GONE);// 初始化时默认为折叠状态
+        iv_hide_linkmarker.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        view.findViewById(R.id.ll_linkmarker).setOnClickListener(v -> {
+            if (ll_linkControl.getVisibility() == View.VISIBLE) {
+                resetLinkMarker();
+            } else {
+                ll_linkControl.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.push_in));
+                ll_linkControl.setVisibility(View.VISIBLE);
+                iv_hide_linkmarker.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            }
+        });
+    }
+
+    private void initAttackDefenseSync() {
+        // 监听攻击力文本框
+        atkText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isEqual && !isUpdating) {
+                    isUpdating = true; // 防止循环更新
+                    defText.setText(s);
+                    defText.setSelection(s.length()); // 保持光标位置
+                    isUpdating = false;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+            }
+        });
+
+        // 监听守备力文本框
+        defText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isEqual && !isUpdating) {
+                    isUpdating = true; // 防止循环更新
+                    atkText.setText(s);
+                    atkText.setSelection(s.length()); // 保持光标位置
+                    isUpdating = false;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+            }
+        });
+    }
+
+    private void reset(Spinner spinner) {
+        if (spinner.getCount() > 0) {
+            spinner.setSelection(0);
+        }
+    }
+
+    private int getIntSelect(Spinner spinner) {
+        return (int) getSelect(spinner);
+    }
+
+    private long getSelect(Spinner spinner) {
+        return SimpleSpinnerAdapter.getSelect(spinner);
+    }
+
+    private String getSelectText(Spinner spinner) {
+        return SimpleSpinnerAdapter.getSelectText(spinner);
+    }
+
+    protected String text(EditText editText) {
+        CharSequence charSequence = editText.getText();
+        if (charSequence == null) {
+            return null;
+        }
+        return charSequence.toString();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_search) {
+            search();
+            // 如果搜索历史不为空，跳转到最后一条之后，以便显示"上一次搜索"按钮
+            if (!searchHistory.isEmpty()) {
+                searchIndex = searchHistory.size();
+                updateSearchNavButtons();
+            }
+        } else if (v.getId() == R.id.btn_reset) {
+            resetAll();
+        } else if (v.getId() == myFavButton.getId()) {
+            if (isShowFavorite()) {
+                hideFavorites(true);
+            } else {
+                showFavorites(true);
+            }
+        } else if (v.getId() == R.id.btn_last_search) {
+            onLastSearch();
+        } else if (v.getId() == R.id.btn_next_search) {
+            onNextSearch();
+        } else if (v.getId() == R.id.btn_equal) {
+            if (btn_equal.isSelected()) {
+                resetEqualButton();//重置相等模式按钮
+            } else {//未选中时的逻辑
+                btn_equal.setSelected(true);
+                btn_equal.setTextColor(YGOUtil.c(R.color.yellow));
+                btn_equal.setBackground(mContext.getDrawable(R.drawable.radius));
+                isEqual = true;
+                //开启时，将空的输入框填写上有内容的输入框的文本
+                if (!text(atkText).isEmpty() && text(defText).isEmpty()) {
+                    defText.setText(atkText.getText());
+                }
+                if (text(atkText).isEmpty() && !text(defText).isEmpty()) {
+                    atkText.setText(defText.getText());
+                }
+            }
+        }
+    }
+
+    public void search(String message) {
+        if (TextUtils.isEmpty(message)) {
+            message = "";
+        }
+        keyWord.setText(message, false);
+        search();
+    }
+
+    public String getCurrentKeyword() {
+        return text(keyWord);
+    }
+    private void search() {
+        if (mICardSearcher != null) {
+            keyWord.dismissDropDown();
+            String keyword = text(keyWord);
+            if (!TextUtils.isEmpty(keyword)) {
+                SharedPreferenceUtil.addKeywordHistory(keyword);
+            }
+            int limitType = genesys_Switch.isChecked() ? getIntSelect(genesys_limitSpinner) : getIntSelect(limitSpinner);
+            String limitName = genesys_Switch.isChecked() ? getSelectText(genesys_limitListSpinner) : getSelectText(limitListSpinner);
+            CardSearchInfo searchInfo = new CardSearchInfo.Builder()
+                    .ot(otList)
+                    .limitName(limitName)
+                    .limitType(limitType)
+                    .setcode(setCodeList)
+                    .setcode_logic(setcode_isAnd)
+                    .category(categoryList)
+                    .cardTypes(cardTypeList)
+                    .spellTrapTypes(spellTrapTypeList)
+                    .attribute(attributeList)
+                    .level(levelList)
+                    .race(raceList)
+                    .monsterTypes(monsterTypeList)
+                    .type_logic(isAnd)
+                    .except_types(excludeTypeList)
+                    .pscale(pendulumScaleList)
+                    .linkKey(lineKey)
+                    .atk(text(atkText))
+                    .def(text(defText))
+                    .equal_logic(isEqual)
+                    .sum_logic(isSum)
+                    .atk_or_def_logic(isOr)
+                    .keyword(keyword)
+                    .build();
+
+            performSearch(searchInfo, true);
+        }
+    }
+
+    private void performSearch(CardSearchInfo searchInfo, boolean record) {
+        // 任何普通搜索都将收藏按钮复位为默认状态，
+        // 之后点击收藏按钮可重新进入按下状态并显示收藏卡片列表
+        resetFavoriteState();
+        if (mICardSearcher != null) {
+            mICardSearcher.search(searchInfo);
+        }
+        if (record && !isDefaultSearch(searchInfo)) {
+            // 检查是否已经存在相同的搜索条件
+            int sameIndex = findSameSearchInfo(searchHistory, searchInfo);
+            if (sameIndex >= 0) {
+                // 找到相同的搜索条件，将其设为最后一条
+                searchHistory.remove(sameIndex);
+                searchHistory.add(searchInfo);
+                searchIndex = searchHistory.size() - 1;
+            } else {
+                // 没有相同条件，正常追加
+                searchHistory.add(searchInfo);
+                searchIndex = searchHistory.size() - 1;
+            }
+        }
+        updateSearchNavButtons();
+    }
+
+    /**
+     * 将一次由卡片详情触发的外部关键词搜索（点击高亮文字、点击关联卡片按钮）记入搜索历史。
+     * 仅更新历史列表与导航按钮状态，不重新执行搜索、不改动搜索面板的筛选条件，
+     * 以保持各调用方当前的结果展示不变。记录的条目为仅含关键词的 CardSearchInfo，
+     * 因此通过“上一次/下一次”导航可复现为对该关键词的普通搜索。
+     *
+     * @param keyword 关键词；为空时不记录
+     */
+    public void recordHistoryKeyword(String keyword) {
+        if (TextUtils.isEmpty(keyword)) {
+            return;
+        }
+        CardSearchInfo info = new CardSearchInfo.Builder()
+                .keyword(keyword)
+                .cardTypes(new ArrayList<>())
+                .build();
+        // 与 performSearch 保持一致的去重：若已存在相同条件则将其移到末尾，避免重复条目
+        int sameIndex = findSameSearchInfo(searchHistory, info);
+        if (sameIndex >= 0) {
+            searchHistory.remove(sameIndex);
+        }
+        searchHistory.add(info);
+        searchIndex = searchHistory.size() - 1;
+        updateSearchNavButtons();
+    }
+
+    private boolean isDefaultSearch(CardSearchInfo info) {
+        if (info.getKeyWord() != null && !TextUtils.isEmpty(info.getKeyWord().getValue())) {
+            return false;
+        }
+        if (info.getOt() != null && !info.getOt().isEmpty()) return false;
+        if (info.getCategory() != null && !info.getCategory().isEmpty()) return false;
+        if (info.getCardTypes() != null && !info.getCardTypes().isEmpty()) return false;
+        if (info.getSpellTrapTypes() != null && !info.getSpellTrapTypes().isEmpty()) return false;
+        if (info.getAttribute() != null && !info.getAttribute().isEmpty()) return false;
+        if (info.getLevel() != null && !info.getLevel().isEmpty()) return false;
+        if (info.getRace() != null && !info.getRace().isEmpty()) return false;
+        if (info.getMonsterType() != null && !info.getMonsterType().isEmpty()) return false;
+        if (info.getExceptTypes() != null && !info.getExceptTypes().isEmpty()) return false;
+        if (info.getSetcode() != null && !info.getSetcode().isEmpty()) return false;
+        if (info.getPscale() != null && !info.getPscale().isEmpty()) return false;
+        if (info.getLinkKey() > 0) return false;
+        if (!TextUtils.isEmpty(info.getAtk())) return false;
+        if (!TextUtils.isEmpty(info.getDef())) return false;
+        if (info.isTypeLogic()) return false;
+        if (info.isSetcodeLogic()) return false;
+        if (info.isEqualLogic()) return false;
+        if (info.isSumLogic()) return false;
+        if (info.isAtkOrDefLogic()) return false;
+        return true;
+    }
+
+    private void onLastSearch() {
+        if (searchIndex > 0) {
+            searchIndex--;
+            CardSearchInfo searchInfo = searchHistory.get(searchIndex);
+            applySearchInfo(searchInfo);
+            performSearch(searchInfo, false);
+        }
+    }
+
+    private void onNextSearch() {
+        if (searchIndex >= 0 && searchIndex < searchHistory.size() - 1) {
+            searchIndex++;
+            CardSearchInfo searchInfo = searchHistory.get(searchIndex);
+            applySearchInfo(searchInfo);
+            performSearch(searchInfo, false);
+        }
+    }
+
+    private void updateSearchNavButtons() {
+        btnLastSearch.setVisibility(searchIndex > 0 ? View.VISIBLE : View.INVISIBLE);
+        btnNextSearch.setVisibility(searchIndex >= 0 && searchIndex < searchHistory.size() - 1 ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    /**
+     * 查找搜索历史中与给定 searchInfo 完全相同的条目索引
+     * @param searchInfo 新的搜索条件
+     * @return 如果找到返回索引，否则返回 -1
+     */
+    private int findSameSearchInfo(List<CardSearchInfo> history, CardSearchInfo searchInfo) {
+        if (searchInfo == null || history == null || history.isEmpty()) {
+            return -1;
+        }
+
+        for (int i = 0; i < history.size(); i++) {
+            CardSearchInfo existing = history.get(i);
+            if (isSameSearchInfo(existing, searchInfo)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 判断两个 CardSearchInfo 是否完全相同（所有字段都相等）
+     */
+    private boolean isSameSearchInfo(CardSearchInfo info1, CardSearchInfo info2) {
+        if (info1 == null || info2 == null) {
+            return false;
+        }
+        if (info1 == info2) {
+            return true; // 同一个对象引用
+        }
+
+        // 比较关键词
+        String keyword1 = info1.getKeyWord() != null ? info1.getKeyWord().getValue() : "";
+        String keyword2 = info2.getKeyWord() != null ? info2.getKeyWord().getValue() : "";
+        if (!TextUtils.equals(keyword1, keyword2)) {
+            return false;
+        }
+
+        // 比较 OT
+        if (!listEquals(info1.getOt(), info2.getOt())) {
+            return false;
+        }
+
+        // 比较类别
+        if (!listEquals(info1.getCategory(), info2.getCategory())) {
+            return false;
+        }
+
+        // 比较卡片类型
+        if (!listEquals(info1.getCardTypes(), info2.getCardTypes())) {
+            return false;
+        }
+
+        // 比较魔陷类型
+        if (!listEquals(info1.getSpellTrapTypes(), info2.getSpellTrapTypes())) {
+            return false;
+        }
+
+        // 比较属性
+        if (!listEquals(info1.getAttribute(), info2.getAttribute())) {
+            return false;
+        }
+
+        // 比较等级
+        if (!listEquals(info1.getLevel(), info2.getLevel())) {
+            return false;
+        }
+
+        // 比较种族
+        if (!listEquals(info1.getRace(), info2.getRace())) {
+            return false;
+        }
+
+        // 比较怪兽种类
+        if (!listEquals(info1.getMonsterType(), info2.getMonsterType())) {
+            return false;
+        }
+
+        // 比较排除类型
+        if (!listEquals(info1.getExceptTypes(), info2.getExceptTypes())) {
+            return false;
+        }
+
+        // 比较字段
+        if (!listEquals(info1.getSetcode(), info2.getSetcode())) {
+            return false;
+        }
+
+        // 比较灵摆刻度
+        if (!listEquals(info1.getPscale(), info2.getPscale())) {
+            return false;
+        }
+
+        // 比较攻击力、守备力
+        if (!TextUtils.equals(info1.getAtk(), info2.getAtk())) {
+            return false;
+        }
+        if (!TextUtils.equals(info1.getDef(), info2.getDef())) {
+            return false;
+        }
+
+        // 比较链接值
+        if (info1.getLinkKey() != info2.getLinkKey()) {
+            return false;
+        }
+
+        // 比较禁卡表
+        if (info1.getLimitType() != info2.getLimitType()) {
+            return false;
+        }
+        if (!TextUtils.equals(info1.getLimitName(), info2.getLimitName())) {
+            return false;
+        }
+
+        // 比较各种逻辑开关
+        if (info1.isTypeLogic() != info2.isTypeLogic()) {
+            return false;
+        }
+        if (info1.isSetcodeLogic() != info2.isSetcodeLogic()) {
+            return false;
+        }
+        if (info1.isEqualLogic() != info2.isEqualLogic()) {
+            return false;
+        }
+        if (info1.isSumLogic() != info2.isSumLogic()) {
+            return false;
+        }
+        if (info1.isAtkOrDefLogic() != info2.isAtkOrDefLogic()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean listEquals(List<?> l1, List<?> l2) {
+        if (l1 == null && l2 == null) {
+            return true;
+        }
+        if (l1 == null || l2 == null) {
+            return false;
+        }
+        if (l1.size() != l2.size()) {
+            return false;
+        }
+        return l1.equals(l2);
+    }
+
+    /**
+     * 刷新历史数据：重建 adapter 并重新设置（空输入=显示全部历史）
+     */
+    private boolean refreshKeywordHistory() {
+        List<String> history = SharedPreferenceUtil.getKeywordHistory();
+        keywordHistoryAdapter = new KeywordHistoryAdapter(mContext, history, this::removeKeywordHistory);
+        keyWord.setAdapter(keywordHistoryAdapter);
+        return !history.isEmpty();
+    }
+
+    /**
+     * 删除指定的关键词历史记录：持久化移除后，就地更新下拉列表数据，
+     * 保持下拉展开状态以便连续删除；若已无记录则收起下拉。
+     */
+    private void removeKeywordHistory(String keyword) {
+        SharedPreferenceUtil.removeKeywordHistory(keyword);
+        if (keywordHistoryAdapter != null) {
+            keywordHistoryAdapter.remove(keyword);
+        }
+        if (keywordHistoryAdapter == null || keywordHistoryAdapter.getCount() == 0) {
+            keyWord.dismissDropDown();
+        }
+    }
+
+    private void showKeywordDropdown() {
+        if (refreshKeywordHistory()) {
+            keyWord.showDropDown();
+        }
+    }
+
+    private void applySearchInfo(CardSearchInfo info) {
+        if (info == null) {
+            return;
+        }
+        // 先重置所有条件
+        resetAll();
+        // 关键词
+        String keywordValue = info.getKeyWord() != null ? info.getKeyWord().getValue() : "";
+        keyWord.setText(keywordValue, false);
+        keyWord.dismissDropDown();
+        // 恢复genesys模式开关（根据禁卡表名称判断）
+        boolean genesysMode = false;
+        if (!TextUtils.isEmpty(info.getLimitName())) {
+            genesysMode = mLimitManager.getGenesysLimitNames().contains(info.getLimitName());
+        }
+        if (genesysMode != genesys_Switch.isChecked()) {
+            genesys_Switch.setChecked(genesysMode);
+        }
+        // 禁限类型与禁卡表
+        setSpinnerSelectByValue(limitSpinner, info.getLimitType());
+        setSpinnerSelectByText(limitListSpinner, info.getLimitName());
+        setSpinnerSelectByValue(genesys_limitSpinner, info.getLimitType());
+        setSpinnerSelectByText(genesys_limitListSpinner, info.getLimitName());
+        // OT
+        if (info.getOt() != null) {
+            for (int i = 0; i < otButtons.length; i++) {
+                setButtonSelected(otButtons[i], info.getOt().contains(otIds[i].getId()), otIds[i].getId(), otList);
+            }
+        }
+        // 字段
+        setcode_isAnd = info.isSetcodeLogic();
+        RadioGroup radioGroupSetcode = findViewById(R.id.radio_group_setcode);
+        radioGroupSetcode.check(setcode_isAnd ? R.id.rb_and_setcode : R.id.rb_or_setcode);
+        if (info.getSetcode() != null) {
+            List<CardSet> setnames = mStringManager.getCardSets();
+            for (long code : info.getSetcode()) {
+                if (setCodeList.contains(code)) {
+                    continue;
+                }
+                if (code == -1L) {
+                    setCodeList.add(code);
+                    addSetcodeTag(getString(R.string.label_set_No_Setcode), code);
+                } else {
+                    for (CardSet set : setnames) {
+                        if (set.getCode() == code) {
+                            setCodeList.add(code);
+                            addSetcodeTag(set.getName(), code);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        // 效果分类
+        if (info.getCategory() != null) {
+            for (int i = 0; i < categoryButtons.length; i++) {
+                setButtonSelected(categoryButtons[i], info.getCategory().contains(categories[i].value()), categories[i].value(), categoryList);
+            }
+        }
+        // 卡片类型（含魔陷图标栏、怪兽区布局联动）
+        if (info.getCardTypes() != null) {
+            boolean hasMonster = info.getCardTypes().contains(typeIds[0]);
+            boolean hasSpell = info.getCardTypes().contains(typeIds[1]);
+            boolean hasTrap = info.getCardTypes().contains(typeIds[2]);
+            boolean noType = !hasMonster && !hasSpell && !hasTrap;
+            setButtonSelected(cardTypeButtons[0], hasMonster, typeIds[0], cardTypeList);
+            setButtonSelected(cardTypeButtons[1], hasSpell, typeIds[1], cardTypeList);
+            setButtonSelected(cardTypeButtons[2], hasTrap, typeIds[2], cardTypeList);
+            layout_monster.setVisibility(hasMonster || noType ? View.VISIBLE : View.GONE);
+            ll_icon.setVisibility(hasSpell || hasTrap || noType ? View.VISIBLE : View.GONE);
+            iconButtons[0].setVisibility(hasSpell || noType ? View.VISIBLE : View.GONE);
+            iconButtons[2].setVisibility(hasSpell || noType ? View.VISIBLE : View.GONE);
+            iconButtons[3].setVisibility(hasSpell || noType ? View.VISIBLE : View.GONE);
+            iconButtons[5].setVisibility(hasSpell || noType ? View.VISIBLE : View.GONE);
+            iconButtons[4].setVisibility(hasTrap || noType ? View.VISIBLE : View.GONE);
+        }
+        // 魔陷图标
+        if (info.getSpellTrapTypes() != null) {
+            for (int i = 0; i < iconButtons.length; i++) {
+                setButtonSelected(iconButtons[i], info.getSpellTrapTypes().contains(iconIds[i]), iconIds[i], spellTrapTypeList);
+            }
+        }
+        // 属性
+        if (info.getAttribute() != null) {
+            for (int i = 0; i < attributeButtons.length; i++) {
+                setButtonSelected(attributeButtons[i], info.getAttribute().contains(attributeIds[i].getId()), attributeIds[i].getId(), attributeList);
+            }
+        }
+        // 种族
+        if (info.getRace() != null) {
+            for (int i = 0; i < raceButtons.length; i++) {
+                setButtonSelected(raceButtons[i], info.getRace().contains(raceIds[i].value()), raceIds[i].value(), raceList);
+            }
+        }
+        // 怪兽种类
+        if (info.getMonsterType() != null) {
+            for (int i = 0; i < monsterTypeButtons.length; i++) {
+                setButtonSelected(monsterTypeButtons[i], info.getMonsterType().contains(monsterTypeIds[i]), monsterTypeIds[i], monsterTypeList);
+            }
+        }
+        // 怪兽种类逻辑(and/or)
+        isAnd = info.isTypeLogic();
+        RadioGroup radioGroup = findViewById(R.id.radio_group);
+        radioGroup.check(isAnd ? R.id.rb_and : R.id.rb_or);
+        // 排除种类
+        if (info.getExceptTypes() != null) {
+            for (int i = 0; i < exclude_typeButtons.length; i++) {
+                setButtonSelected(exclude_typeButtons[i], info.getExceptTypes().contains(monsterTypeIds[i]), monsterTypeIds[i], excludeTypeList, R.drawable.radius_p);
+            }
+        }
+        // 等级
+        if (info.getLevel() != null) {
+            for (int i = 0; i < levelButtons.length; i++) {
+                boolean selected = info.getLevel().contains(i + 1);
+                levelButtons[i].setSelected(selected);
+                levelButtons[i].setBackground(mContext.getDrawable(selected ? R.drawable.radius : R.drawable.button_radius_black_transparents));
+                if (selected) {
+                    if (!levelList.contains(i + 1)) {
+                        levelList.add(i + 1);
+                    }
+                } else {
+                    levelList.remove(Integer.valueOf(i + 1));
+                }
+            }
+        }
+        // 灵摆刻度
+        if (info.getPscale() != null) {
+            for (int i = 0; i < pendulumScaleButtons.length; i++) {
+                boolean selected = info.getPscale().contains(i);
+                pendulumScaleButtons[i].setSelected(selected);
+                pendulumScaleButtons[i].setBackground(mContext.getDrawable(selected ? R.drawable.radius : R.drawable.button_radius_black_transparents));
+                if (selected) {
+                    if (!pendulumScaleList.contains(i)) {
+                        pendulumScaleList.add(i);
+                    }
+                } else {
+                    pendulumScaleList.remove(Integer.valueOf(i));
+                }
+            }
+        }
+        // 连接箭头
+        if (info.getLinkKey() > 0) {
+            String binary = String.format("%9s", Integer.toBinaryString(info.getLinkKey())).replace(' ', '0');
+            for (int i = 0; i < linkButton.length; i++) {
+                if (i == 4) {
+                    BtnVals[i] = "0";
+                    continue;
+                }
+                boolean selected = binary.charAt(8 - i) == '1';
+                BtnVals[i] = selected ? "1" : "0";
+                linkButton[i].setBackgroundResource(selected ? enImgs[i] : disImgs[i]);
+            }
+            lineKey = info.getLinkKey();
+        }
+        // 攻击力、守备力
+        atkText.setText(info.getAtk());
+        defText.setText(info.getDef());
+        // 攻守相等逻辑
+        if (info.isEqualLogic()) {
+            btn_equal.setSelected(true);
+            btn_equal.setTextColor(YGOUtil.c(R.color.yellow));
+            btn_equal.setBackground(mContext.getDrawable(R.drawable.radius));
+            isEqual = true;
+            if (!text(atkText).isEmpty() && text(defText).isEmpty()) {
+                defText.setText(atkText.getText());
+            }
+            if (text(atkText).isEmpty() && !text(defText).isEmpty()) {
+                atkText.setText(defText.getText());
+            }
+        }
+        // 攻守合计、攻或守逻辑（通过checkbox监听器同步状态）
+        chk_atkDef_sum.setChecked(info.isSumLogic());
+        chk_atkDef_or.setChecked(info.isAtkOrDefLogic());
+        // 恢复各筛选栏目的展开/收起状态：有选中项则展开，否则收起
+        updateSectionVisibility(gl_ot, iv_hide_ot, !otList.isEmpty());
+        updateSectionVisibility(tag_setcode, iv_hide_setCode, !setCodeList.isEmpty());
+        updateSectionVisibility(gl_category, iv_hide_category, !categoryList.isEmpty());
+        updateSectionVisibility(gl_cardType, iv_hide_cardType, !cardTypeList.isEmpty());
+        updateSectionVisibility(gl_icon, iv_hide_spelltrap, !spellTrapTypeList.isEmpty());
+        updateSectionVisibility(gl_attr, iv_hide_attr, !attributeList.isEmpty());
+        updateSectionVisibility(gl_race, iv_hide_race, !raceList.isEmpty());
+        updateSectionVisibility(gl_monsterType, iv_hide_monsterType, !monsterTypeList.isEmpty());
+        updateSectionVisibility(gl_exclude_type, iv_hide_exclude_type, !excludeTypeList.isEmpty());
+        updateSectionVisibility(gl_level_rank_link, iv_hide_level_rank_link, !levelList.isEmpty());
+        updateSectionVisibility(gl_pendulum_scale, iv_hide_pendulum_scale, !pendulumScaleList.isEmpty());
+        updateSectionVisibility(ll_linkControl, iv_hide_linkmarker, lineKey > 0);
+    }
+
+    private void updateSectionVisibility(View section, ImageView arrow, boolean expand) {
+        section.setVisibility(expand ? View.VISIBLE : View.GONE);
+        arrow.setImageResource(expand ? R.drawable.baseline_keyboard_arrow_up_24 : R.drawable.baseline_keyboard_arrow_down_24);
+    }
+
+    private <T> void setButtonSelected(Button button, boolean selected, T id, List<T> list) {
+        setButtonSelected(button, selected, id, list, R.drawable.radius);
+    }
+
+    private <T> void setButtonSelected(Button button, boolean selected, T id, List<T> list, int selectedBg) {
+        button.setSelected(selected);
+        button.setBackground(mContext.getDrawable(selected ? selectedBg : R.drawable.button_radius_black_transparents));
+        button.setTextColor(YGOUtil.c(selected ? R.color.yellow : R.color.gray));
+        if (selected) {
+            if (!list.contains(id)) {
+                list.add(id);
+            }
+        } else {
+            list.remove(id);
+        }
+    }
+
+    private void setSpinnerSelectByValue(Spinner spinner, long value) {
+        if (spinner.getAdapter() != null) {
+            for (int i = 0; i < spinner.getCount(); i++) {
+                Object item = spinner.getItemAtPosition(i);
+                if (item instanceof SimpleSpinnerItem && ((SimpleSpinnerItem) item).value == value) {
+                    spinner.setSelection(i);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void setSpinnerSelectByText(Spinner spinner, String text) {
+        if (TextUtils.isEmpty(text)) {
+            if (spinner.getCount() > 0) {
+                spinner.setSelection(0);
+            }
+            return;
+        }
+        if (spinner.getAdapter() != null) {
+            for (int i = 0; i < spinner.getCount(); i++) {
+                Object item = spinner.getItemAtPosition(i);
+                if (item instanceof SimpleSpinnerItem && TextUtils.equals(((SimpleSpinnerItem) item).text, text)) {
+                    spinner.setSelection(i);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void resetAll() {
+        if (mICardSearcher != null) {
+            mICardSearcher.onReset();
+        }
+        keyWord.setText(null);
+        reset(limitSpinner.getVisibility() == View.VISIBLE ? limitSpinner : genesys_limitSpinner);
+        resetOt();
+        resetSetcode();
+        resetCategory();
+        resetCardType();
+        resetMonster();
+    }
+
+    private void resetOt() {
+        gl_ot.setVisibility(View.GONE);
+        iv_hide_ot.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < otButtons.length; i++) {
+            otButtons[i].setSelected(false);
+            otButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            otButtons[i].setTextColor(YGOUtil.c(R.color.gray));
+            otList.remove(Integer.valueOf(otIds[i].getId()));//需要int转Integer再移除以免超过索引
+        }
+    }
+
+    private void resetSetcode() {
+        tag_setcode.setVisibility(View.GONE);
+        iv_hide_setCode.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        // 清空 setCodeList
+        setCodeList.clear();
+
+        // 移除所有标签，但保留第一个提示标签 (tv_setcode)
+        while (tag_setcode.getChildCount() > 1) {
+            tag_setcode.removeViewAt(1); // 从索引1开始移除，保留索引0的提示标签
+        }
+
+        // 确保提示标签是可见的
+        if (tag_setcode.getChildCount() > 0) {
+            View firstChild = tag_setcode.getChildAt(0);
+            if (firstChild instanceof TextView &&
+                    firstChild.getId() == R.id.tv_setcode) {
+                firstChild.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void resetCategory() {
+        gl_category.setVisibility(View.GONE);
+        iv_hide_category.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < categoryButtons.length; i++) {
+            categoryButtons[i].setSelected(false);
+            categoryButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            categoryButtons[i].setTextColor(YGOUtil.c(R.color.gray));
+            categoryList.remove(categories[i].value());
+        }
+    }
+
+    private void resetCardType() {
+        gl_cardType.setVisibility(View.GONE);
+        iv_hide_cardType.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < cardTypeButtons.length; i++) {
+            cardTypeButtons[i].setSelected(false);
+            cardTypeButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            cardTypeButtons[i].setTextColor(YGOUtil.c(R.color.gray));
+            cardTypeList.remove(typeIds[i]);
+        }
+        resetIcons();
+        if (ll_icon.getVisibility() == View.GONE) ll_icon.setVisibility(View.VISIBLE);
+        if (layout_monster.getVisibility() == View.GONE) layout_monster.setVisibility(View.VISIBLE);
+    }
+
+    private void resetMonster() {
+        // 重置怪兽卡按钮为未选中
+        cardTypeButtons[0].setSelected(false);
+        cardTypeButtons[0].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+        cardTypeButtons[0].setTextColor(YGOUtil.c(R.color.gray));
+        cardTypeList.remove(CardType.Monster.getId()); // 从monstertypeList中移除怪兽相关的ID
+
+        resetAttribute();// 重置属性按钮为未选中
+        resetRace();// 重置种族按钮为未选中
+        resetMonsterType();// 重置怪兽子种类按钮为未选中
+        resetExcludeType();// 重置排除种类按钮为未选中
+        resetLevel();// 重置等级按钮为未选中
+        resetPScale();// 重置灵摆刻度按钮为未选中
+        resetLinkMarker(); // 重置链接标记按钮为未选中
+        resetEqualButton();//重置相等模式按钮
+        resetSumCheckbox();// 重置攻守合计checkbox为未选中
+        resetOrCheckbox();// 重置攻或守满足checkbox为未选中
+        atkText.setText(null);// 清除输入的攻击力
+        defText.setText(null);// 清除输入的守备力
+
+        lineKey = 0;// 清除灵摆键值
+    }
+
+    private void resetAttribute() {
+        gl_attr.setVisibility(View.GONE);
+        iv_hide_attr.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < attributeButtons.length; i++) {
+            attributeButtons[i].setSelected(false);
+            attributeButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            attributeButtons[i].setTextColor(YGOUtil.c(R.color.gray));
+            attributeList.remove(attributeIds[i].getId());
+        }
+    }
+
+    private void resetRace() {
+        gl_race.setVisibility(View.GONE);
+        iv_hide_race.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < raceButtons.length; i++) {
+            raceButtons[i].setSelected(false);
+            raceButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            raceButtons[i].setTextColor(YGOUtil.c(R.color.gray));
+            raceList.remove(raceIds[i].value());
+        }
+    }
+
+    private void resetMonsterType() {
+        gl_monsterType.setVisibility(View.GONE);
+        iv_hide_monsterType.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < monsterTypeButtons.length; i++) {
+            monsterTypeButtons[i].setSelected(false);
+            monsterTypeButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            monsterTypeButtons[i].setTextColor(YGOUtil.c(R.color.gray));
+            monsterTypeList.remove(monsterTypeIds[i]);
+        }
+    }
+
+    private void resetExcludeType() {
+        gl_exclude_type.setVisibility(View.GONE);
+        iv_hide_exclude_type.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < exclude_typeButtons.length; i++) {
+            exclude_typeButtons[i].setSelected(false);
+            exclude_typeButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            exclude_typeButtons[i].setTextColor(YGOUtil.c(R.color.gray));
+            excludeTypeList.remove(monsterTypeIds[i]);
+        }
+    }
+
+    private void resetLevel() {
+        gl_level_rank_link.setVisibility(View.GONE);
+        iv_hide_level_rank_link.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < levelButtons.length; i++) {
+            levelButtons[i].setSelected(false);
+            levelButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            Integer levelValue = i + 1;
+            levelList.remove(levelValue);
+        }
+    }
+
+    private void resetPScale() {
+        gl_pendulum_scale.setVisibility(View.GONE);
+        iv_hide_pendulum_scale.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < pendulumScaleButtons.length; i++) {
+            pendulumScaleButtons[i].setSelected(false);
+            pendulumScaleButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            Integer pendulumScaleValue = i;
+            pendulumScaleList.remove(pendulumScaleValue);
+        }
+    }
+
+    private void resetLinkMarker() {
+        ll_linkControl.setVisibility(View.GONE);
+        iv_hide_linkmarker.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+        for (int i = 0; i < linkButton.length; i++) {
+            linkButton[i].setSelected(false);
+            if (linkButton[i] != linkButton[4]) {// 跳过第5个按钮
+                linkButton[i].setBackground(mContext.getDrawable(disImgs[i]));
+            }
+
+        }
+        Arrays.fill(BtnVals, "0");
+        lineKey = 0;
+    }
+
+    private void resetSpell() {
+        //解除魔法卡种类选中状态
+        cardTypeButtons[1].setSelected(false);
+        cardTypeButtons[1].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+        cardTypeButtons[1].setTextColor(YGOUtil.c(R.color.gray));
+        cardTypeList.remove(CardType.Spell.getId());
+
+        spellButtons = new Button[]{
+                view.findViewById(R.id.btn_icon_quickPlay),// 速攻0
+                view.findViewById(R.id.btn_icon_equip),// 装备2
+                view.findViewById(R.id.btn_icon_field),// 场地3
+                view.findViewById(R.id.btn_icon_ritual),// 仪式5
+        };
+        long[] spellIds = new long[]{
+                CardType.QuickPlay.getId(),
+                CardType.Equip.getId(),
+                CardType.Field.getId(),
+                CardType.Ritual.getId()
+        };
+        //解除魔法相关图标按钮的选中状态
+        for (int i = 0; i < spellButtons.length; i++) {
+            spellButtons[i].setSelected(false);
+            spellButtons[i].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            spellButtons[i].setTextColor(YGOUtil.c(R.color.gray));
+            spellTrapTypeList.remove(spellIds[i]);
+        }
+
+    }
+
+    private void resetTrap() {
+        //解除卡片分类的陷阱卡选中状态
+        cardTypeButtons[2].setSelected(false);
+        cardTypeButtons[2].setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+        cardTypeButtons[2].setTextColor(YGOUtil.c(R.color.gray));
+        cardTypeList.remove(CardType.Trap.getId());
+
+        //解除陷阱相关图标按钮的选中状态
+        Button trapButton = view.findViewById(R.id.btn_icon_counter);// 反击4
+        trapButton.setSelected(false);
+        trapButton.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+        trapButton.setTextColor(YGOUtil.c(R.color.gray));
+        spellTrapTypeList.remove(CardType.Counter.getId());
+    }
+
+    private void resetIcons() {
+        gl_icon.setVisibility(View.GONE);
+        iv_hide_spelltrap.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);// 重置为折叠状态
+        resetSpell();// 解除魔法独有类型的选中状态
+        resetTrap();// 解除陷阱独有类型的选中状态（也就反击陷阱）
+
+        Button[] conti_normal_icons = new Button[]{// 单独处理魔法和陷阱都有的种类
+                view.findViewById(R.id.btn_icon_continuous),// 永续
+                view.findViewById(R.id.btn_icon_normal),// 通常
+        };
+        //解除魔法陷阱共有种类永续、通常图标按钮的选中状态
+        for (Button bothButton : conti_normal_icons) {
+            bothButton.setSelected(false);
+            bothButton.setBackground(mContext.getDrawable(R.drawable.button_radius_black_transparents));
+            bothButton.setTextColor(YGOUtil.c(R.color.gray));
+        }
+        spellTrapTypeList.remove(CardType.Continuous.getId());
+        spellTrapTypeList.remove(CardType.Normal.getId());
+        // 将所有icon全部显示
+        for (Button iconButton : iconButtons) {
+            iconButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void resetEqualButton() {
+        btn_equal.setSelected(false);
+        btn_equal.setTextColor(YGOUtil.c(R.color.default_bmb_shadow_color));
+        btn_equal.setBackground(mContext.getDrawable(R.drawable.selected_dark));
+        isEqual = false;
+    }
+
+    private void resetSumCheckbox() {
+        chk_atkDef_sum.setChecked(false);
+        ll_equal_def.setVisibility(View.VISIBLE);
+        isSum = false;
+    }
+
+    private void resetOrCheckbox() {
+        chk_atkDef_or.setChecked(false);
+        ll_equal_def.setVisibility(View.VISIBLE);
+        isOr = false;
+    }
+
+    public interface CallBack {
+        void setLimit(LimitList limit, String caller);
+
+        void onSearchStart();
+
+        void onSearchResult(List<Card> Cards, boolean isHide);
+    }
+}

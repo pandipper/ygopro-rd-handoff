@@ -1,0 +1,79 @@
+{
+  "welcome": [
+    "Olá, eu sou um robô.",
+    "As funções de IA estão em teste. Por favor, envie feedback prontamente se encontrar algum problema."
+  ],
+  "deckerror": [
+    "Desculpe, parece haver um problema com a quantidade de {0} no meu deck."
+  ],
+  "duelstart": [
+    "O verdadeiro show só está começando! &good",
+    "Deixe os duelos trazerem sorrisos! &laugh"
+  ],
+  "newturn": [
+    "É o meu turno, comprar! &reluctant",
+    "Meu turno, comprar! &laugh",
+    "Eu comprei uma carta. &stick_tongue"
+  ],
+  "endturn": [
+    "Turno finalizado. &shy",
+    "Meu turno acabou. &stick_tongue",
+    "Seu turno. &reluctant"
+  ],
+  "directattack": [
+    "{0}, ataque direto! &rage",
+    "{0}, ataque direto ao oponente! &cool",
+    "{0}, não há defesa, ataque! &rage",
+    "{0}, ataque os Pontos de Vida do oponente! &ridiculous",
+    "{0}, ataque direto aos Pontos de Vida do oponente! &cool",
+    "{0}, derrote o oponente com ataque direto! &ridiculous",
+    "{0}, use ataque direto para derrotar o oponente! &rage",
+    "{0}, ataque direto e liberte seu poder! &laugh",
+    "Meu {0} vai esmagar seus Pontos de Vida! &laugh",
+    "Mostre seu poder ao oponente, {0}! &cool",
+    "Você não pode me parar mais. {0}, ataque! &cool"
+  ],
+  "attack": [
+    "{0}, ataque este {1}! &reluctant",
+    "{0}, destrua este {1}! &rage",
+    "{0}, derrote {1}! &ridiculous",
+    "{0}, avance contra aquele {1}! &laugh",
+    "{0}, liberte seu poder em {1}! &rage"
+  ],
+  "ondirectattack": [
+    "Droga……&despise",
+    "É só {0}! &rage",
+    "Você acha que isso pode me derrotar? &reluctant"
+  ],
+  "facedownmonstername": "Monstro",
+  "activate": [
+    "Eu ativo {0}. &ridiculous",
+    "Eu uso o efeito de {0}. &cool",
+    "Eu uso o poder de {0}. &laugh"
+  ],
+  "summon": [
+    "Eu invoco {0}. &cool",
+    "Venha, {0}! &stick_tongue",
+    "Apareça, {0}! &laugh",
+    "Eu invoquei o poderoso {0}!",
+    "Eu chamo {0} para participar da batalha! &cool",
+    "Eu convoco {0}. &shy",
+    "Deixe-me invocar {0}. &stick_tongue"
+  ],
+  "setmonster": [
+    "Eu coloquei um monstro. &shy",
+    "Eu coloquei um monstro em posição de rosto para baixo. &sneaky"
+  ],
+  "chaining": [
+    "Olhe aqui! Eu ativo {0}! &ridiculous",
+    "Eu uso o poder de {0}. &cool",
+    "Pronto! Eu uso {0}! &surprised",
+    "Eu não concordo. Ative {0}! &sneaky",
+    "Parece que você esqueceu do meu {0}! &confused",
+    "Você pensou que eu tinha {0}? &reluctant"
+  ],
+  "surrender": [
+    "Eu me rendo. &obedient",
+    "Eu concedo a sua vitória. &good"
+  ]
+}

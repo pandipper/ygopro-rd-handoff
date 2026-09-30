@@ -1,0 +1,43 @@
+{
+  "welcome": [
+    "Hola, soy demasiado guapo."
+  ],
+  "deckerror": [
+    "Perdón, parece haber un problema con la cantidad de {0} en mi deck. &sneaky"
+  ],
+  "duelstart": [
+    "Vamos a tener un duelo honesto (escondiendo un dragón en el pantalón) &ridiculous"
+  ],
+  "newturn": [
+    "Ahora es mi escenario &cool"
+  ],
+  "endturn": [
+    "Cada uno tiene objetivos diferentes, me preocupo más por la potencia, solo quiero ganar. &ridiculous"
+  ],
+  "directattack": [
+    "Voy allá, voy a quitarte la vida &rage"
+  ],
+  "attack": [
+    "Desaparece, peón &cool"
+  ],
+  "ondirectattack": [
+    "Papá, perdóname &bawl",
+    "Tan aterrador &surprised"
+  ],
+  "facedownmonstername": "Monstruo",
+  "activate": [
+    "El efecto de esta carta, aunque no esté escrito en ella, se puede usar así de todos modos. &ridiculous"
+  ],
+  "summon": [
+    "Fuerte, invencible &good",
+    "Invocar a {0}, ganancia enorme &stick_tongue",
+    "{0} es básicamente una carta falsa &reluctant",
+    "Siempre voy a amar a {0} &cool"
+  ],
+  "setmonster": [
+    "Me quedé sin jugada de nuevo &obedient"
+  ],
+  "chaining": [
+    "Tonto, mira cómo contesto cada uno de tus movimientos &sneaky"
+  ]
+}

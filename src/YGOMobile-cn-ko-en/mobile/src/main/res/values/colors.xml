@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffff</color>
+    <color name="gray">#D0D0D0</color>
+    <color name="star">#CD6600</color>
+    <color name="star_rank">#a89e9e</color>
+    <color name="black">#000000</color>
+    <color name="blackLinght">#AA000000</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorNavy">#0A032D</color>
+    <color name="mediumPurpleLight">#775AC7</color>
+    <color name="mediumPurple">#673AB7</color>
+    <color name="mediumPurpleDark">#572AA7</color>
+    <color name="colorPrimaryDark">#2f41a5</color>
+    <color name="gold">#C8BE35</color>
+    <color name="gold_light">#D8DE45</color>
+    <color name="red">#EF3934</color>
+    <color name="colorAccent">@android:color/holo_red_light</color>
+    <color name="colorAccentDark">#CF3934</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="item_title">@color/gold</color>
+    <color name="item_bg">#40ffffff</color>
+    <color name="item_bg2">#70ffffff</color>
+    <color name="brightgreen">#a0f10a</color>
+    <color name="holo_blue_bright">#ff00ddff</color>
+    <color name="holo_blue_light">#ff33b5e5</color>
+    <color name="holo_green_bright">#95d389</color>
+    <color name="holo_orange_bright">#ff982a</color>
+    <color name="holo_orange_bright_transparents">#ddff982a</color>
+    <color name="FallNavy">#11113d</color>
+    <color name="colorMain">#2196F3</color>
+    <color name="background">#ECEFF1</color>
+    <color name="transparent">#00000000</color>
+    <color name="klein_blue">#002FA7</color>
+
+    <color name="search_text_color">#ff8800</color>
+    <color name="search_list_item_color">#b8be35</color>
+    <color name="blackLight">#7C7C7C</color>
+    <color name="blackLight2">#AA202020</color>
+    <color name="grayLight">#E1E1E1</color>
+    <color name="grayDark">#A7A7A7</color>
+    <color name="grayDark2">#8E8E8E</color>
+</resources>

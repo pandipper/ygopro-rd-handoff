@@ -1,0 +1,535 @@
+package cn.garymb.ygomobile.loader;
+
+import android.text.TextUtils;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ocgcore.data.Card;
+import ocgcore.enums.CardOt;
+import ocgcore.enums.CardType;
+
+public class CardSearchInfo implements ICardFilter {
+    //名字或者描述
+    private CardKeyWord keyWord;
+    private List<Integer> ot;
+    private List<Integer> pscale;
+    private String atk;
+    private String def;
+    private int linkKey;
+    private int limitType;
+    private String limitName;
+    private List<Long> cardtypes;
+    private List<Long> spelltraptypes;
+    private List<Long> attribute;
+    private List<Integer> level;
+    private List<Long> race;
+    private List<Long> category;
+    private List<Long> monstertypes;
+    private List<Long> except_types;
+    private List<Long> setcode;
+
+    //true为and逻辑, false为or逻辑
+    private boolean type_logic;
+    private boolean setcode_logic;
+    private boolean equal_logic;
+    private boolean sum_logic;
+    private boolean atk_or_def_logic;
+
+    public CardSearchInfo() {
+    }
+
+    public int getLimitType() {
+        return limitType;
+    }
+
+    public String getLimitName() {
+        return limitName;
+    }
+
+    public CardKeyWord getKeyWord() {
+        return keyWord;
+    }
+
+    public List<Long> getAttribute() {
+        return attribute;
+    }
+
+    public List<Integer> getLevel() {
+        return level;
+    }
+
+    public List<Integer> getOt() {
+        return ot;
+    }
+
+    public List<Integer> getPscale() {
+        return pscale;
+    }
+
+    public List<Long> getRace() {
+        return race;
+    }
+
+    public List<Long> getCategory() {
+        return category;
+    }
+
+    public String getAtk() {
+        return atk;
+    }
+
+    public String getDef() {
+        return def;
+    }
+
+    public int getLinkKey() {
+        return linkKey;
+    }
+
+    public List<Long> getCardTypes() {
+        return cardtypes;
+    }
+
+    public List<Long> getSpellTrapTypes() {
+        return spelltraptypes;
+    }
+
+    public List<Long> getMonsterType() {
+        return monstertypes;
+    }
+
+    public List<Long> getExceptTypes() {
+        return except_types;
+    }
+
+    public List<Long> getSetcode() {
+        return setcode;
+    }
+
+    public String getTypeLogice() {
+        return type_logic ? "and" : "or";
+    }
+
+    public String getSetCodeLogice() {
+        return setcode_logic ? "and" : "or";
+    }
+
+    public String getEqualLogice() {
+        return equal_logic ? "true" : "false";
+    }
+
+    public String getSumLogice() {
+        return sum_logic ? "true" : "false";
+    }
+
+    public String getAtkOrDefLogice() {
+        return atk_or_def_logic ? "true" : "false";
+    }
+
+    public boolean isTypeLogic() {
+        return type_logic;
+    }
+
+    public boolean isSetcodeLogic() {
+        return setcode_logic;
+    }
+
+    public boolean isEqualLogic() {
+        return equal_logic;
+    }
+
+    public boolean isSumLogic() {
+        return sum_logic;
+    }
+
+    public boolean isAtkOrDefLogic() {
+        return atk_or_def_logic;
+    }
+
+    public static class Builder {
+        private final CardSearchInfo searchInfo = new CardSearchInfo();
+
+        public CardSearchInfo build() {
+            searchInfo.ot = copyList(searchInfo.ot);
+            searchInfo.cardtypes = copyList(searchInfo.cardtypes);
+            searchInfo.spelltraptypes = copyList(searchInfo.spelltraptypes);
+            searchInfo.attribute = copyList(searchInfo.attribute);
+            searchInfo.level = copyList(searchInfo.level);
+            searchInfo.pscale = copyList(searchInfo.pscale);
+            searchInfo.race = copyList(searchInfo.race);
+            searchInfo.category = copyList(searchInfo.category);
+            searchInfo.monstertypes = copyList(searchInfo.monstertypes);
+            searchInfo.except_types = copyList(searchInfo.except_types);
+            searchInfo.setcode = copyList(searchInfo.setcode);
+            return searchInfo;
+        }
+
+        private static <T> List<T> copyList(List<T> list) {
+            return list != null ? new ArrayList<>(list) : new ArrayList<>();
+        }
+
+        public Builder limitType(int limit) {
+            searchInfo.limitType = limit;
+            return this;
+        }
+
+        public Builder limitName(String val) {
+            searchInfo.limitName = val;
+            return this;
+        }
+
+        public Builder keyword(String val) {
+            searchInfo.keyWord = new CardKeyWord(val);
+            return this;
+        }
+
+        public Builder attribute(List<Long> val) {
+            searchInfo.attribute = val;
+            return this;
+        }
+
+        public Builder level(List<Integer> val) {
+            searchInfo.level = val;
+            return this;
+        }
+
+        public Builder ot(List<Integer> val) {
+            searchInfo.ot = val;
+            return this;
+        }
+
+        public Builder pscale(List<Integer> val) {
+            searchInfo.pscale = val;
+            return this;
+        }
+
+        public Builder race(List<Long> val) {
+            searchInfo.race = val;
+            return this;
+        }
+
+        public Builder category(List<Long> val) {
+            searchInfo.category = val;
+            return this;
+        }
+
+        public Builder atk(String val) {
+            searchInfo.atk = val;
+            return this;
+        }
+
+        public Builder def(String val) {
+            searchInfo.def = val;
+            return this;
+        }
+
+        public Builder linkKey(int linkKey) {
+            searchInfo.linkKey = linkKey;
+            return this;
+        }
+
+        public Builder cardTypes(List<Long> types) {
+            searchInfo.cardtypes = types;
+            return this;
+        }
+
+        public Builder spellTrapTypes(List<Long> types) {
+            searchInfo.spelltraptypes = types;
+            return this;
+        }
+
+        public Builder monsterTypes(List<Long> types) {
+            searchInfo.monstertypes = types;
+            return this;
+        }
+
+        public Builder except_types(List<Long> except_types) {
+            searchInfo.except_types = except_types;
+            return this;
+        }
+
+        public Builder setcode(List<Long> setcode) {
+            searchInfo.setcode = setcode;
+            return this;
+        }
+
+        public Builder type_logic(boolean logic) {
+            searchInfo.type_logic = logic;
+            return this;
+        }
+
+        public Builder setcode_logic(boolean logic) {
+            searchInfo.setcode_logic = logic;
+            return this;
+        }
+
+        public Builder equal_logic(boolean logic) {
+            searchInfo.equal_logic = logic;
+            return this;
+        }
+
+        public Builder sum_logic(boolean logic) {
+            searchInfo.sum_logic = logic;
+            return this;
+        }
+
+        public Builder atk_or_def_logic(boolean logic) {
+            searchInfo.atk_or_def_logic = logic;
+            return this;
+        }
+    }
+
+    @NonNull
+    public String toString() {
+        return "CardSearchInfo{" +
+                "LimitType=" + getLimitType() +
+                ", Ot=" + getOt() +
+                ", LimitName=" + getLimitName() +
+                ", KeyWord=" + getKeyWord() +
+                ", cardType=" + getCardTypes() +
+                ", spellTrapType=" + getSpellTrapTypes() +
+                ", Attribute=" + getAttribute() +
+                ", Level=" + getLevel() +
+                ", PScale=" + getPscale() +
+                ", Category=" + getCategory() +
+                ", ATK=" + getAtk() +
+                ", DEF=" + getDef() +
+                ", LINK=" + getLinkKey() +
+                ", Race=" + getRace() +
+                ", Type=" + getMonsterType() +
+                ", ExceptType=" + getExceptTypes() +
+                ", SetCode=" + getSetcode() +
+                ", TypeLogic=" + getTypeLogice() +
+                ", SetCodeLogic=" + getSetCodeLogice() +
+                ", SetEqualLogic=" + getEqualLogice() +
+                ", SetSumLogic=" + getSumLogice() +
+                ", SetAtkOrDefLogic=" + getAtkOrDefLogice() +
+                '}';
+    }
+
+    public static boolean containsIgnoreCase(String src, String what) {
+        // https://stackoverflow.com/a/25379180
+        final int length = what.length();
+        if (length == 0)
+            return true; // Empty string is contained
+
+        final char firstLo = Character.toLowerCase(what.charAt(0));
+        final char firstUp = Character.toUpperCase(what.charAt(0));
+
+        for (int i = src.length() - length; i >= 0; i--) {
+            // Quick check before calling the more expensive regionMatches() method:
+            final char ch = src.charAt(i);
+            if (ch != firstLo && ch != firstUp)
+                continue;
+
+            if (src.regionMatches(true, i, what, 0, length))
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean chkAtkDef(int ct, String search) {
+        switch (search.charAt(0)) {
+            case '＞':
+            case '>':
+                if (search.length() > 1 && search.charAt(1) == '=') {
+                    return ct >= (TextUtils.isDigitsOnly(search.substring(2)) ? i(search.substring(2)) : -2);
+                } else {
+                    return ct > (TextUtils.isDigitsOnly(search.substring(1)) ? i(search.substring(1)) : -2);
+                }
+            case '＜':
+            case '<':
+                if (search.length() > 1 && search.charAt(1) == '=') {
+                    return ct <= (TextUtils.isDigitsOnly(search.substring(2)) ? i(search.substring(2)) : -2);
+                } else {
+                    return ct < (TextUtils.isDigitsOnly(search.substring(1)) ? i(search.substring(1)) : -2);
+                }
+            case '≥':
+                return ct >= (TextUtils.isDigitsOnly(search.substring(1)) ? i(search.substring(1)) : -2);
+            case '≤':
+                return ct <= (TextUtils.isDigitsOnly(search.substring(1)) ? i(search.substring(1)) : -2);
+            case '=':
+                return ct == (TextUtils.isDigitsOnly(search.substring(1)) ? i(search.substring(1)) : -2);
+            default:
+                return ct == (TextUtils.isDigitsOnly(search) ? i(search) : -2);
+        }
+    }
+
+    /**
+     * 验证卡片是否符合当前过滤器的所有条件
+     *
+     * @param card 待验证的卡片对象
+     * @return 如果卡片符合所有过滤条件则返回true，否则返回false
+     */
+    @Override
+    public boolean isValid(Card card) {
+        // 检查关键词过滤条件
+        if (keyWord != null && !keyWord.isValid(card)) {
+            return false;
+        }
+
+        // 检查字段过滤条件（支持逻辑与/或）
+        if (!setcode.isEmpty() && (setcode_logic ? setcode.stream().filter(card::isSetCode).count() != setcode.size() : setcode.stream().noneMatch(card::isSetCode))) {
+            return false;
+        }
+        // 检查属性过滤条件
+        if (!attribute.isEmpty() && !attribute.contains(card.Attribute)) {
+            return false;
+        }
+        // 检查等级/星级过滤条件
+        if (!level.isEmpty() && !level.contains(card.getStar())) {
+            return false;
+        }
+        // 检查攻击力过滤条件（支持范围和精确值）
+        if (!TextUtils.isEmpty(atk)) {
+            if (sum_logic) {
+                // 当 sum_logic 为 true 时，检查攻击力和守备力总和是否与 atk 相等
+                int sum = card.Attack + card.Defense;
+                if (atk.contains("-")) {
+                    String[] atks = atk.split("-");
+                    if (!(i(atks[0]) <= sum && sum <= i(atks[1]))) {
+                        return false;
+                    }
+                } else if (!chkAtkDef(sum, atk)) {
+                    return false;
+                }
+            } else if (atk_or_def_logic) {
+                // 当 atk_or_def_logic 为 true 时，检查攻击力或守备力是否与 atk 相等
+                int attack = card.Attack;
+                int defense = card.Defense;
+                if (atk.contains("-")) {
+                    String[] atks = atk.split("-");
+                    // 检查攻击力或守备力是否在范围内
+                    if (!((i(atks[0]) <= attack && attack <= i(atks[1])) || (i(atks[0]) <= defense && defense <= i(atks[1])))) {
+                        return false;
+                    }
+                } else {
+                    // 检查攻击力或守备力是否等于指定值
+                    if (!chkAtkDef(attack, atk) && !chkAtkDef(defense, atk)) {
+                        return false;
+                    }
+                }
+            } else {
+                if (atk.contains("-")) {
+                    String[] atks = atk.split("-");
+                    if (!(i(atks[0]) <= card.Attack && card.Attack <= i(atks[1]))) {
+                        return false;
+                    }
+                } else if (!chkAtkDef(card.Attack, atk)) {
+                    return false;
+                }
+            }
+        }
+
+        // 检查链接值过滤条件（如果是链接怪兽）或防御力过滤条件
+        if (linkKey > 0) {
+            if (!((card.Defense & linkKey) == linkKey && (card.isType(CardType.Link)))) {
+                return false;
+            }
+        } else {
+            if (!TextUtils.isEmpty(def)) {
+                if (def.contains("-")) {
+                    String[] defs = def.split("-");
+                    if (!(i(defs[0]) <= card.Defense && card.Defense <= i(defs[1]))) {
+                        return false;
+                    }
+                } else if (card.isLink() || !chkAtkDef(card.Defense, def)) {
+                    return false;
+                }
+            } else if (TextUtils.isEmpty(atk) && equal_logic) {
+                // 当 atk 和 def 都为空且 equal_logic 为 true 时，检查攻击力和守备力是否相等
+                if (card.Attack != card.Defense) {
+                    return false;
+                }
+            }
+        }
+
+        // 检查卡片OCG\TCG独有过滤条件
+        if (!ot.isEmpty()) {
+            boolean otMatch = ot.stream().anyMatch(otValue -> {
+                // NO_EXCLUSIVE情况：匹配OCG、TCG或SC_OCG
+                if (otValue == CardOt.NO_EXCLUSIVE.getId() && (card.Ot == CardOt.NO_EXCLUSIVE.getId() || card.Ot == CardOt.NO_EXCLUSIVE.getId() + CardOt.SC_OCG.getId())) {
+                    return true;
+                }
+                // 具体OT类型匹配：OCG、TCG、CUSTOM
+                if ((otValue == CardOt.OCG.getId() || otValue == CardOt.TCG.getId() || otValue == CardOt.CUSTOM.getId()) && ot.contains(card.Ot)) {
+                    return true;
+                }
+                // SC_OCG情况：匹配大于等于8的OT值
+                if (otValue == CardOt.SC_OCG.getId() && card.Ot >= CardOt.SC_OCG.getId()) {
+                    return true;
+                }
+                return false;
+            });
+
+            // 如果没有任何OT条件匹配，则返回false
+            if (!otMatch) {
+                return false;
+            }
+        }
+
+        // 检查灵摆刻度过滤条件
+        if (!pscale.isEmpty() && (!card.isType(CardType.Pendulum) || (!pscale.contains(card.LeftScale) && !pscale.contains(card.RightScale)))) {
+            return false;
+        }
+
+        // 检查种族过滤条件
+        if (!race.isEmpty() && !race.contains(card.Race)) {
+            return false;
+        }
+        // 检查效果分类过滤条件
+        if (!category.isEmpty() && category.stream().noneMatch(i -> (card.Category & i) == i)) {
+            return false;
+        }
+
+        // 检查基础卡片类型过滤条件（魔法、陷阱、怪兽等）
+        if (!cardtypes.isEmpty() && (cardtypes.stream().noneMatch(type -> (card.Type & type) == type))) {
+            return false;
+        }
+        // 检查怪兽卡子类型过滤条件
+        if (!monstertypes.isEmpty()) {
+            if (card.isType(CardType.Monster)) {
+                if (type_logic ? monstertypes.stream().filter(type -> (card.Type & type) == type).count() != monstertypes.size()
+                        : monstertypes.stream().noneMatch(type -> (card.Type & type) == type)) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        // 检查魔法陷阱卡子类型过滤条件
+        if (!spelltraptypes.isEmpty()) {
+            if (card.isType(CardType.Spell) || card.isType(CardType.Trap)) {
+                if (spelltraptypes.contains(CardType.Normal.getId())) {//特殊处理包含通常怪兽的ID时需要过滤出无子分类魔法陷阱的情况
+                    // 遍历魔法/陷阱卡子类型数组，检查卡片是否包含其中任何一个子类型
+                    return (spelltraptypes.stream().anyMatch(type -> (card.onlyType(CardType.Spell) || card.onlyType(CardType.Trap) || (card.Type & type) == type)));
+
+                } else {
+                    // 当spelltraptypes不包含CardType.Normal.getId()时，检查spelltraptypes中是否有匹配的类型
+                    return (spelltraptypes.stream().anyMatch(type -> (card.Type & type) == type));
+                }
+            } else {
+                return false;
+            }
+        }
+
+        // 检查排除类型过滤条件
+        if (!except_types.isEmpty() && except_types.stream().anyMatch(type -> (card.Type & type) == type)) {
+            return false;
+        }
+        return true;
+    }
+
+    private int i(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+}

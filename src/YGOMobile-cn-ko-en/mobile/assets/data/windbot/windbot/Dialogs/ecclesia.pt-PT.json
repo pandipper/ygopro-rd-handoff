@@ -1,0 +1,50 @@
+{
+  "welcome": [
+    "Este é o Pico do Grande Espírito?",
+    "Este é o País do Dragão Dogmático.",
+    "Esta é a Terra Aberta."
+  ],
+  "deckerror": [
+    "{0} está amarrado pela maldição de água gelada!"
+  ],
+  "duelstart": [
+    "Caminhei tanto, estou com fome……&shy",
+    "Que tipo de companheiros vou encontrar à frente?&confused",
+    "Se o Albus estiver comigo……&shy"
+  ],
+  "newturn": [
+    "Meu turno! &angry"
+  ],
+  "endturn": [
+    "Onde diabos está a irmã……&bawl",
+    "A comida seca do Albus também acabou. &shy",
+    "Quando vamos comer?&confused"
+  ],
+  "directattack": [
+    "{0}, ataque direto! &cool",
+    "Hora de comer! &laugh"
+  ],
+  "attack": [
+    "Ataque {1} com {0}! &stick_tongue"
+  ],
+  "ondirectattack": [
+    "Tão com fome……&shy",
+    "Uuu……&bawl",
+    "Irmã……&shy"
+  ],
+  "facedownmonstername": "Monstro",
+  "activate": [
+    "Ative o efeito de {0}! &stick_tongue"
+  ],
+  "summon": [
+    "Invoco {0}! &cool",
+    "Venha, {0}! &stick_tongue"
+  ],
+  "setmonster": [
+    "……&sneaky"
+  ],
+  "chaining": [
+    "Ative o efeito de {0}! &laugh",
+    "{0}! &laugh"
+  ]
+}
