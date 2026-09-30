@@ -5,6 +5,24 @@
 
 ---
 
+## 仓库地址与恢复方式
+
+- **仓库**：<https://github.com/pandipper/ygopro-rd-handoff>（**私有**）
+- **SSH**：`git@github.com:pandipper/ygopro-rd-handoff.git`
+
+在另一台电脑上：
+
+```bash
+git clone https://github.com/pandipper/ygopro-rd-handoff.git
+cd ygopro-rd-handoff
+# 然后按顺序读：README.md → docs/01 → docs/02 → docs/03
+```
+
+> 若是首次在该机器上克隆私有库，需要先登录 GitHub 账号
+> （Windows 会弹出 git-credential-manager 浏览器授权；或配置 Personal Access Token）。
+
+---
+
 ## 目标
 
 在 **MDPro3** 的"本地 AI 对战"模式里，切换到 **Rush Duel（超速决斗）** 规则，
